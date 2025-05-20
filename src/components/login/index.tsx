@@ -1,0 +1,228 @@
+import { AntDesign } from "@expo/vector-icons";
+import { Link } from "expo-router";
+import React, { useState } from "react";
+import {
+    ActivityIndicator,
+    Image,
+    KeyboardAvoidingView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from "react-native";
+import { useAuth } from "../../../app/context/Auth";
+
+export default function LoginScreen() {
+
+
+    const [email, setEmail] = useState("");
+    const [password, setPass] = useState("");
+    const [carregando, setCarregando] = useState(false);
+    const [mostrarSenha, setMostrarSenha] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [userInfo, setUserInfo] = useState<any>(null);
+
+    const { signIn } = useAuth();
+
+    function handleLogin() {
+        signIn(email, password);
+    }
+
+    const alternarVisibilidade = () => {
+        setMostrarSenha(!mostrarSenha);
+    };
+
+    return (
+        <View style={{ flex: 1, backgroundColor: "#3CAE54" }}>
+            <View
+                style={{
+                    width: "100%",
+                    maxHeight: 250,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Image
+                    source={require("../../../assets/images/logoLucky.png")}
+                    style={{ height: 150, width: 100 }}
+                    resizeMode="contain"
+                />
+            </View>
+
+            <View
+                style={{
+                    flex: 1,
+                    padding: 25,
+                    backgroundColor: "#fff",
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                }}
+            >
+                <Text style={styles.textsH1}>CONTA LUCKY</Text>
+
+                <KeyboardAvoidingView behavior="padding">
+                    <Text style={{ color: "#717171", fontWeight: "600" }}>
+                        Telefone:
+                    </Text>
+                    <TextInput
+                        style={styles.input}
+                        value={email}
+                        onChangeText={setEmail}
+                        autoCapitalize="none"
+                        keyboardType="number-pad"
+                        placeholder="Seu telefone sem espaços"
+                    />
+
+                    <Text style={{ color: "#717171", fontWeight: "600" }}>Senha:</Text>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <TextInput
+                            style={[
+                                styles.input,
+                                {
+                                    flex: 1,
+                                    borderRightWidth: 0,
+                                    borderTopRightRadius: 0,
+                                    borderBottomRightRadius: 0,
+                                },
+                            ]}
+                            value={password}
+                            onChangeText={setPass}
+                            placeholder="******"
+                            secureTextEntry={!mostrarSenha}
+                        />
+                        <TouchableOpacity
+                            onPress={alternarVisibilidade}
+                            style={styles.olho}
+                        >
+                            <AntDesign
+                                name={mostrarSenha ? "eye" : "eyeo"}
+                                size={24}
+                                color="#333"
+                            />
+                        </TouchableOpacity>
+                    </View>
+
+                    <TouchableOpacity onPress={handleLogin} style={styles.button}>
+                        <Text style={styles.buttonTxt}> Entrar </Text>
+                    </TouchableOpacity>
+
+                    {carregando ? (
+                        <ActivityIndicator size={"small"} style={{ margin: 20 }} />
+                    ) : (
+                        <Link style={{ marginTop: "10%" }} href="/register">
+                            <Text
+                                style={{
+                                    color: "#D4D3D8",
+                                    fontWeight: "700",
+                                    fontSize: 14,
+                                    textAlign: "center",
+                                    marginTop: "10%",
+                                }}
+                            >
+                                Não tem uma conta no Lucky ainda? Registrar-se agora!
+                            </Text>
+                        </Link>
+                    )}
+                </KeyboardAvoidingView>
+            </View>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    textsH1: {
+        textAlign: "center",
+        fontSize: 25,
+        fontWeight: "900",
+        fontFamily: "Dongle_700Bold",
+        marginBottom: "5%",
+        letterSpacing: -1.5,
+        color: "#28262E",
+    },
+    input: {
+        width: "100%",
+        marginVertical: 4,
+        height: 50,
+        borderWidth: 2,
+        borderRadius: 4,
+        padding: 10,
+        backgroundColor: "#fff",
+        borderColor: "#F5F5F5",
+        marginBottom: "4%",
+    },
+    olho: {
+        padding: 10,
+        borderWidth: 2,
+        borderColor: "#F5F5F5",
+        borderLeftWidth: 0,
+        borderTopRightRadius: 4,
+        borderBottomRightRadius: 4,
+        height: 50,
+        marginBottom: "3%",
+    },
+    button: {
+        marginTop: "2%",
+        backgroundColor: "#3CAE54",
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: "#ffffff",
+        padding: 10,
+        height: 50,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    buttonRedesG: {
+        marginTop: "2%",
+        backgroundColor: "#fff",
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: "#DEDEDE",
+        padding: 10,
+        height: 50,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    buttonTxt: {
+        textAlign: "center",
+        fontSize: 15,
+        textTransform: "uppercase",
+        color: "#ffffff",
+        fontWeight: "800",
+    },
+    buttonRedesF: {
+        marginTop: '2%',
+        fontFamily: 'Arial sans-serif',
+        backgroundColor: '#ffffff',
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: '#0071F2',
+        padding: 10,
+        height: 50,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buttonTxtG: {
+        textAlign: "center",
+        fontSize: 15,
+        textTransform: "uppercase",
+        color: "#5F6368",
+        fontWeight: "800",
+    },
+    buttonTxtF: {
+        textAlign: 'center',
+        fontSize: 15,
+        textTransform: 'uppercase',
+        color: '#0071F2',
+        fontWeight: 800,
+    }
+});
