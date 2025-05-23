@@ -28,6 +28,7 @@ export default function LoginScreen() {
     useEffect(() => {
         GoogleSignin.configure({
             webClientId: '515317620527-g6eikuir369gdcvmc868ljng30j9qsvn.apps.googleusercontent.com ', // obtido no console do Google
+            iosClientId: 'com.googleusercontent.apps.515317620527-07o9rcbq0mnl78i47mh8n7v88hn3enbi'
         });
     }, []);
 
