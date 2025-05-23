@@ -2,7 +2,8 @@
   "expo": {
     "name": "Lucky",
     "slug": "AppLuckyExpo",
-    "version": "1.0.0",
+    "version": "1.0.1",
+    "runtimeVersion": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/logoLucky-150.png",
     "scheme": "lucky",
@@ -45,6 +46,9 @@
       "eas": {
         "projectId": "d243cb14-2ca1-45ae-8578-06d33709b027"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d243cb14-2ca1-45ae-8578-06d33709b027"
     }
   }
 }
