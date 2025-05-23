@@ -35,12 +35,11 @@ export default function LoginScreen() {
     const signInWithGoogle = async () => {
         try {
             await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            console.log('User Info:', userInfo);
-            Alert.alert('Login Successful', JSON.stringify(userInfo));
+            const info = await GoogleSignin.signIn();
+            setUserInfo(info);
+            Alert.alert(JSON.stringify(info));
         } catch (error) {
-            console.error('Google Sign-In Error:', error);
-            Alert.alert('Login Failed', error);
+            Alert.alert(error);
         }
     };
 
@@ -134,8 +133,9 @@ export default function LoginScreen() {
                     <TouchableOpacity onPress={handleLogin} style={styles.button}>
                         <Text style={styles.buttonTxt}> Entrar </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={signInWithGoogle} style={styles.button}>
-                        <Text style={styles.buttonTxt}> Continuar com o Google </Text>
+                    <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesG}>
+                        <Image source={require('../../../assets/images/gIcon.png')} />
+                        <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
                     </TouchableOpacity>
 
                     {carregando ? (
