@@ -30,8 +30,6 @@ const Mid: React.FC = () => {
     <View style={styles.container}>
       <Text style={styles.infoText}>Escolha o botão! </Text>
 
-      <Link href={'/congrats'} >Seguir</Link>
-
       {[1, 2, 3, 4, 5].map((buttonNumber) => (
         <TouchableOpacity
           key={buttonNumber}

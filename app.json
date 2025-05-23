@@ -4,7 +4,7 @@
     "slug": "AppLuckyExpo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logoLucky.png",
+    "icon": "./assets/images/logoLucky-150.png",
     "scheme": "lucky",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,7 +14,7 @@
     "android": {
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logoLucky.png",
+        "foregroundImage": "./assets/images/logoLucky-150.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
