@@ -27,6 +27,12 @@
       "favicon": "./assets/images/logoLucky.png"
     },
     "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "reservedClientId": "com.googleusercontent.apps.515317620527-g6eikuir369gdcvmc868ljng30j9qsvn"
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",

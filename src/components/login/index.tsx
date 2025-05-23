@@ -1,8 +1,10 @@
 import { AntDesign } from "@expo/vector-icons";
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Link } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     Image,
     KeyboardAvoidingView,
     StyleSheet,
@@ -22,6 +24,25 @@ export default function LoginScreen() {
     const [mostrarSenha, setMostrarSenha] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [userInfo, setUserInfo] = useState<any>(null);
+
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId: '515317620527-g6eikuir369gdcvmc868ljng30j9qsvn.apps.googleusercontent.com ', // obtido no console do Google
+        });
+    }, []);
+
+    const signInWithGoogle = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log('User Info:', userInfo);
+            Alert.alert('Login Successful', JSON.stringify(userInfo));
+        } catch (error) {
+            console.error('Google Sign-In Error:', error);
+            Alert.alert('Login Failed', error);
+        }
+    };
+
 
     const { signIn } = useAuth();
 
@@ -111,6 +132,9 @@ export default function LoginScreen() {
 
                     <TouchableOpacity onPress={handleLogin} style={styles.button}>
                         <Text style={styles.buttonTxt}> Entrar </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={signInWithGoogle} style={styles.button}>
+                        <Text style={styles.buttonTxt}> Continuar com o Google </Text>
                     </TouchableOpacity>
 
                     {carregando ? (
