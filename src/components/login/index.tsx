@@ -1,5 +1,8 @@
 import { AntDesign } from "@expo/vector-icons";
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {
+    GoogleSignin,
+    isSuccessResponse
+} from '@react-native-google-signin/google-signin';
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -36,10 +39,15 @@ export default function LoginScreen() {
         try {
             await GoogleSignin.hasPlayServices();
             const info = await GoogleSignin.signIn();
-            setUserInfo(info);
-            Alert.alert(JSON.stringify(info));
+            if(isSuccessResponse(info)){
+                const {idToken, user} = info.data;
+                const {name, email, photo} = user;
+                Alert.alert(name, email);
+            }else{
+                Alert.alert("Login cancelado.")
+            }
         } catch (error) {
-            Alert.alert(error);
+            //
         }
     };
 
@@ -134,8 +142,12 @@ export default function LoginScreen() {
                         <Text style={styles.buttonTxt}> Entrar </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesG}>
-                        <Image source={require('../../../assets/images/gIcon.png')} />
+                        <Image source={require('../../../assets/images/gIcon.png')} width={22}/>
                         <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesF}>
+                        <Image source={require('../../../assets/images/fIcon.png')} width={22}/>
+                        <Text style={styles.buttonTxtF}> Continuar com o Facebook </Text>
                     </TouchableOpacity>
 
                     {carregando ? (
