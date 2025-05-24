@@ -52,6 +52,7 @@ export default function LoginScreen() {
         } catch (error) {
             if (isErrorWithCode(error)) {
                 switch (error.code) {
+                    console.log(error);
                     case statusCodes.IN_PROGRESS:
                         setError("Login em progresso... aguarde")
                         break;
