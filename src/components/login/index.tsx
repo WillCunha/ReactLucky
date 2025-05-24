@@ -142,7 +142,7 @@ export default function LoginScreen() {
                     <TouchableOpacity onPress={handleLogin} style={styles.button}>
                         <Text style={styles.buttonTxt}> Entrar </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity  style={styles.buttonRedesG}>
+                    <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesG}>
                         <Image source={require('../../../assets/images/gIcon.png')} style={styles.iconSocial}/>
                         <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
                     </TouchableOpacity>
