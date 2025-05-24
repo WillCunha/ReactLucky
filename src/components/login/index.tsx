@@ -5,7 +5,8 @@ import {
     isSuccessResponse,
     statusCodes
 } from '@react-native-google-signin/google-signin';
-import { Link } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import { Link, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -21,7 +22,10 @@ import {
 import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk-next';
 import { useAuth } from "../../../app/context/Auth";
 
+
 export default function LoginScreen() {
+
+    const navigation = useNavigation();
 
 
     const [email, setEmail] = useState("");
@@ -43,8 +47,18 @@ export default function LoginScreen() {
             await GoogleSignin.hasPlayServices();
             const info = await GoogleSignin.signIn();
             if (isSuccessResponse(info)) {
-                setUserInfo(info.data);
-                console.log(JSON.stringify(info.data))
+                const { idToken, user } = info.data;
+                const { name, email, photo } = user;
+                const plataforma = "Google";
+                router.push({
+                    pathname: '/continuar',
+                    params: {
+                        vName: name,
+                        vEmail: email,
+                        vPhoto: photo,
+                        vPlataforma: 'android',
+                    },
+                });
             } else {
                 Alert.alert("Login cancelado.")
             }

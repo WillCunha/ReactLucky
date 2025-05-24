@@ -14,6 +14,7 @@ export default function RootLayout() {
     }}>
       <Stack.Screen name="login" options={{headerShown: true, title: 'Entrar'}}/>
       <Stack.Screen name="register" options={{headerShown: false, title: 'Registrar-se'}}/>
+      <Stack.Screen name="continuar" options={{headerShown: true, title: 'Concluir Cadastro'}}/>
 
     </Stack>
   )
