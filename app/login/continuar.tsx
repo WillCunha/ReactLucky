@@ -9,6 +9,7 @@ import { useAuth } from '../context/Auth';
 
 export default function ContinuarScreen() {
 
+    console.log('Entrou na tela Continuar')
     const route = useRoute();
     const { name, email, photo, plataforma } = route.params;
 
