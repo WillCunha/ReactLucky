@@ -1,9 +1,0 @@
-{
-    "installed": {
-        "client_id": "515317620527-2i47pdlih9vjaf3vpvpj7f6khvd42bet.apps.googleusercontent.com",
-        "project_id": "api-project-515317620527",
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs"
-    }
-}
