@@ -18,6 +18,7 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
+import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk-next';
 import { useAuth } from "../../../app/context/Auth";
 
 export default function LoginScreen() {
@@ -32,7 +33,7 @@ export default function LoginScreen() {
 
     useEffect(() => {
         GoogleSignin.configure({
-            webClientId: '515317620527-g6eikuir369gdcvmc868ljng30j9qsvn.apps.googleusercontent.com ', // obtido no console do Google
+            webClientId: '515317620527-g6eikuir369gdcvmc868ljng30j9qsvn.apps.googleusercontent.com', // obtido no console do Google
             iosClientId: 'com.googleusercontent.apps.515317620527-07o9rcbq0mnl78i47mh8n7v88hn3enbi'
         });
     }, []);
@@ -43,16 +44,14 @@ export default function LoginScreen() {
             const info = await GoogleSignin.signIn();
             if (isSuccessResponse(info)) {
                 setUserInfo(info.data);
-                const { idToken, user } = info.data;
-                const { name, email, photo } = user;
-                Alert.alert(JSON.stringify(info.data));
+                console.log(JSON.stringify(info.data))
             } else {
                 Alert.alert("Login cancelado.")
             }
-        } catch (error) {
+        } catch (err) {
+            console.log('Sign-In error:', JSON.stringify(error, null, 2));
             if (isErrorWithCode(error)) {
                 switch (error.code) {
-                    console.log(error);
                     case statusCodes.IN_PROGRESS:
                         setError("Login em progresso... aguarde")
                         break;
@@ -65,6 +64,51 @@ export default function LoginScreen() {
                         setError(error.code);
                 }
             }
+        }
+    };
+
+    const signInWithFacebook = async () => {
+        try {
+            // Faz o login solicitando permissões
+            const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+            if (result.isCancelled) {
+                Alert.alert('Login cancelado');
+                return;
+            }
+
+            const data = await AccessToken.getCurrentAccessToken();
+
+            if (!data) {
+                Alert.alert('Erro ao obter token de acesso');
+                return;
+            }
+            const infoRequest = new GraphRequest(
+                '/me',
+                {
+                    accessToken: data.accessToken,
+                    parameters: {
+                        fields: {
+                            string: 'id, name, email, picture.type(large)',
+                        },
+                    },
+                },
+                (error, result) => {
+                    if (error) {
+                        Alert.alert('Erro ao buscar dados do usuário', error.toString());
+                    } else {
+                        setUserInfo({
+                            name: result.name,
+                            email: result.email,
+                            picture: result.picture.data.url,
+                        });
+                    }
+                }
+            );
+            new GraphRequestManager().addRequest(infoRequest).start();
+            console.log(userInfo);
+        } catch (e) {
+            Alert.alert('Erro no login com Facebook', e.toString());
         }
     };
 
@@ -155,7 +199,7 @@ export default function LoginScreen() {
                         </TouchableOpacity>
                     </View>
 
-                    <Text style={{color: "#cc0000", fontSize: 14, fontWeight: 800}} >{error}</Text>
+                    <Text style={{ color: "#cc0000", fontSize: 14, fontWeight: 800 }} >{error}</Text>
 
                     <TouchableOpacity onPress={handleLogin} style={styles.button}>
                         <Text style={styles.buttonTxt}> Entrar </Text>
@@ -164,7 +208,7 @@ export default function LoginScreen() {
                         <Image source={require('../../../assets/images/gIcon.png')} style={styles.iconSocial} />
                         <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonRedesF}>
+                    <TouchableOpacity onPress={signInWithFacebook} style={styles.buttonRedesF}>
                         <Image source={require('../../../assets/images/fIcon.png')} style={styles.iconSocial} />
                         <Text style={styles.buttonTxtF}> Continuar com o Facebook </Text>
                     </TouchableOpacity>

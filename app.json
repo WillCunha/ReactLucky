@@ -32,6 +32,15 @@
     },
     "plugins": [
       [
+        "react-native-fbsdk-next",
+        {
+          "appID": "428664706881612",
+          "clientToken": "2461fea456d27dcf8c2b39efb8f2ec15",
+          "displayName": "Lucky",
+          "facebookScheme": "fb[428664706881612]"
+        }
+      ],
+      [
         "@react-native-google-signin/google-signin",
         {
           "iosUrlScheme": "com.googleusercontent.apps.515317620527-07o9rcbq0mnl78i47mh8n7v88hn3enbi"
