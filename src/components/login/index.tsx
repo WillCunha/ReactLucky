@@ -2,11 +2,10 @@ import { AntDesign } from "@expo/vector-icons";
 import {
     GoogleSignin,
     isErrorWithCode,
-    isSuccessResponse,
     statusCodes
 } from '@react-native-google-signin/google-signin';
 import { useNavigation } from "@react-navigation/native";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -27,7 +26,6 @@ export default function LoginScreen() {
 
     const navigation = useNavigation();
 
-
     const [email, setEmail] = useState("");
     const [password, setPass] = useState("");
     const [carregando, setCarregando] = useState(false);
@@ -46,38 +44,46 @@ export default function LoginScreen() {
         try {
             await GoogleSignin.hasPlayServices();
             const info = await GoogleSignin.signIn();
-            if (isSuccessResponse(info)) {
-                const { idToken, user } = info.data;
+
+            const { user } = info.data;
+            console.log(info.data);
+            if (user?.email) {
+                console.log("email" + user?.email)
                 const { name, email, photo } = user;
-                const plataforma = "Google";
-                router.push({
-                    pathname: '/continuar',
-                    params: {
-                        vName: name,
-                        vEmail: email,
-                        vPhoto: photo,
-                        vPlataforma: 'android',
-                    },
-                });
+
+                navigation.navigate('Continuar', { name, email, photo, plataforma: 'google' });
+                
             } else {
-                Alert.alert("Login cancelado.")
+                Alert.alert("Login cancelado.");
             }
         } catch (err) {
-            console.log('Sign-In error:', JSON.stringify(error, null, 2));
-            if (isErrorWithCode(error)) {
-                switch (error.code) {
+            console.log('Sign-In error:', JSON.stringify(err, null, 2));
+            if (isErrorWithCode(err)) {
+                switch (err.code) {
                     case statusCodes.IN_PROGRESS:
-                        setError("Login em progresso... aguarde")
+                        setError("Login em progresso... aguarde");
                         break;
 
                     case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-                        setError("O 'Play Services' não está disponível neste dispositivo.")
+                        setError("O 'Play Services' não está disponível neste dispositivo.");
                         break;
 
                     default:
-                        setError(error.code);
+                        setError(err.code);
                 }
             }
+        }
+    };
+
+
+
+    const signOutWithGoogle = async () => {
+        try {
+            await GoogleSignin.signOut();
+            setUserInfo(null);
+            console.log("SAIU!")
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -165,6 +171,7 @@ export default function LoginScreen() {
             >
                 <Text style={styles.textsH1}>CONTA LUCKY</Text>
 
+
                 <KeyboardAvoidingView behavior="padding">
                     <Text style={{ color: "#717171", fontWeight: "600" }}>
                         Telefone:
@@ -221,6 +228,10 @@ export default function LoginScreen() {
                     <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesG}>
                         <Image source={require('../../../assets/images/gIcon.png')} style={styles.iconSocial} />
                         <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={signOutWithGoogle} style={styles.buttonRedesG}>
+                        <Image source={require('../../../assets/images/gIcon.png')} style={styles.iconSocial} />
+                        <Text style={styles.buttonTxtG}> SAIR com o Google </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={signInWithFacebook} style={styles.buttonRedesF}>
                         <Image source={require('../../../assets/images/fIcon.png')} style={styles.iconSocial} />
