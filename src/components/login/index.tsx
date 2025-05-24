@@ -1,7 +1,9 @@
 import { AntDesign } from "@expo/vector-icons";
 import {
     GoogleSignin,
-    isSuccessResponse
+    isErrorWithCode,
+    isSuccessResponse,
+    statusCodes
 } from '@react-native-google-signin/google-signin';
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -39,19 +41,29 @@ export default function LoginScreen() {
         try {
             await GoogleSignin.hasPlayServices();
             const info = await GoogleSignin.signIn();
-            if(isSuccessResponse(info)){
+            if (isSuccessResponse(info)) {
                 setUserInfo(info.data);
-                const {idToken, user} = info.data;
-                const {name, email, photo} = user;
+                const { idToken, user } = info.data;
+                const { name, email, photo } = user;
                 Alert.alert(JSON.stringify(info.data));
-            }else{
+            } else {
                 Alert.alert("Login cancelado.")
             }
         } catch (error) {
-            Alert.alert(JSON.stringify(error));
-            setError(JSON.stringify(error));
-            console.error(error);
-            console.log(error);
+            if (isErrorWithCode(error)) {
+                switch (error.code) {
+                    case statusCodes.IN_PROGRESS:
+                        setError("Login em progresso... aguarde")
+                        break;
+
+                    case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+                        setError("O 'Play Services' não está disponível neste dispositivo.")
+                        break;
+
+                    default:
+                        setError(error.code);
+                }
+            }
         }
     };
 
@@ -142,19 +154,17 @@ export default function LoginScreen() {
                         </TouchableOpacity>
                     </View>
 
-                    
-                        <Text style={{color: '#cc0000', fontSize: 14, fontWeight: 700}}>{error}</Text>
-                    
+                    <Text style={{color: "#cc0000", fontSize: 14, fontWeight: 800}} >{error}</Text>
 
                     <TouchableOpacity onPress={handleLogin} style={styles.button}>
                         <Text style={styles.buttonTxt}> Entrar </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesG}>
-                        <Image source={require('../../../assets/images/gIcon.png')} style={styles.iconSocial}/>
+                        <Image source={require('../../../assets/images/gIcon.png')} style={styles.iconSocial} />
                         <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity  style={styles.buttonRedesF}>
-                        <Image source={require('../../../assets/images/fIcon.png')} style={styles.iconSocial}/>
+                    <TouchableOpacity style={styles.buttonRedesF}>
+                        <Image source={require('../../../assets/images/fIcon.png')} style={styles.iconSocial} />
                         <Text style={styles.buttonTxtF}> Continuar com o Facebook </Text>
                     </TouchableOpacity>
 
@@ -270,7 +280,7 @@ const styles = StyleSheet.create({
         color: '#0071F2',
         fontWeight: 800,
     },
-    iconSocial:{
+    iconSocial: {
         maxWidth: 22,
         maxHeight: 22,
     }
