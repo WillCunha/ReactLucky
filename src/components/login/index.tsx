@@ -48,7 +48,7 @@ export default function LoginScreen() {
                 Alert.alert("Login cancelado.")
             }
         } catch (error) {
-            //
+            Alert.alert(JSON.stringify(error));
         }
     };
 
