@@ -40,9 +40,10 @@ export default function LoginScreen() {
             await GoogleSignin.hasPlayServices();
             const info = await GoogleSignin.signIn();
             if(isSuccessResponse(info)){
+                setUserInfo(info.data);
                 const {idToken, user} = info.data;
                 const {name, email, photo} = user;
-                Alert.alert(name, email);
+                Alert.alert(JSON.stringify(info.data));
             }else{
                 Alert.alert("Login cancelado.")
             }
@@ -141,12 +142,12 @@ export default function LoginScreen() {
                     <TouchableOpacity onPress={handleLogin} style={styles.button}>
                         <Text style={styles.buttonTxt}> Entrar </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesG}>
-                        <Image source={require('../../../assets/images/gIcon.png')} width={22}/>
+                    <TouchableOpacity  style={styles.buttonRedesG}>
+                        <Image source={require('../../../assets/images/gIcon.png')} style={styles.iconSocial}/>
                         <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesF}>
-                        <Image source={require('../../../assets/images/fIcon.png')} width={22}/>
+                    <TouchableOpacity  style={styles.buttonRedesF}>
+                        <Image source={require('../../../assets/images/fIcon.png')} style={styles.iconSocial}/>
                         <Text style={styles.buttonTxtF}> Continuar com o Facebook </Text>
                     </TouchableOpacity>
 
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
         padding: 10,
         height: 50,
         flexDirection: "row",
-        justifyContent: "center",
+        justifyContent: 'space-evenly',
         alignItems: "center",
     },
     buttonTxt: {
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
         height: 50,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
     },
     buttonTxtG: {
@@ -261,5 +262,9 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         color: '#0071F2',
         fontWeight: 800,
+    },
+    iconSocial:{
+        maxWidth: 22,
+        maxHeight: 22,
     }
 });
