@@ -49,6 +49,9 @@ export default function LoginScreen() {
             }
         } catch (error) {
             Alert.alert(JSON.stringify(error));
+            setError(JSON.stringify(error));
+            console.error(error);
+            console.log(error);
         }
     };
 
@@ -138,6 +141,10 @@ export default function LoginScreen() {
                             />
                         </TouchableOpacity>
                     </View>
+
+                    
+                        <Text style={{color: '#cc0000', fontSize: 14, fontWeight: 700}}>{error}</Text>
+                    
 
                     <TouchableOpacity onPress={handleLogin} style={styles.button}>
                         <Text style={styles.buttonTxt}> Entrar </Text>
