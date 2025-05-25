@@ -5,6 +5,7 @@ import {
     statusCodes
 } from '@react-native-google-signin/google-signin';
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -19,12 +20,14 @@ import {
     View
 } from "react-native";
 import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk-next';
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { useAuth } from "../context/Auth";
+import { RootStackParamList } from "../routes/Routes";
 
 
 export default function LoginScreen() {
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const [email, setEmail] = useState("");
     const [password, setPass] = useState("");
@@ -48,11 +51,23 @@ export default function LoginScreen() {
             const { user } = info.data;
             console.log(info.data);
             if (user?.email) {
-                console.log("email" + user?.email)
-                const { name, email, photo } = user;
-
-                navigation.navigate('Continuar', { name, email, photo, plataforma: 'google' });
-                
+                try {
+                    const url = 'https://api.wfsoft.com.br/wf-lucky/api/lucky/login?Google';
+                    await axios.post(url, {
+                        email: user?.email,
+                    }).then(response => {
+                        console.log(response.data.resp)
+                        if (response.data.resp == 400) {
+                            const { name, email, photo } = user;
+                            navigation.navigate('Continuar', { name, email, photo, plataforma: 'Google' });
+                        }else{
+                            const data = response.data.resp;
+                            signIn(email, 'Google', ' ', data)
+                        }
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
             } else {
                 Alert.alert("Login cancelado.");
             }
@@ -136,7 +151,7 @@ export default function LoginScreen() {
     const { signIn } = useAuth();
 
     function handleLogin() {
-        signIn(email, password);
+        signIn(email, password, 'Lucky');
     }
 
     const alternarVisibilidade = () => {

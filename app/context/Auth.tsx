@@ -11,7 +11,7 @@ export interface AuthData {
 
 interface AuthContextData {
   authData?: AuthData;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, plataforma: string, password?: string | null,  dados?: Array<any> | null) => Promise<void>;
   signOut: () => Promise<void>;
   isLoading: boolean;
 }
@@ -42,9 +42,15 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }
 
-  async function signIn(email: string, password: string) {
+  async function signIn(email: string,  plataforma: string, password?: string | null, data?: Array<any> | null) {
 
-    if (email !== '' && password !== '') {
+    if (plataforma == 'Google' || 'Facebook') {
+      AsyncStorage.setItem('WF_LUCKY', JSON.stringify(data));
+      setAuthData(data);
+      setisLoading(false);
+    }
+
+    else if ( plataforma == 'Lucky' && email !== '' && password !== '') {
 
       const url = 'https://api.wfsoft.com.br/wf-lucky/api/lucky/login';
       const username = email;
@@ -59,7 +65,7 @@ export const AuthProvider: React.FC = ({ children }) => {
           .then(response => {
             console.log(response.data.resp);
             if (response.data.resp == 400) {
-              
+
               Alert.alert('Erro: ', 'Número de telefone ou senha incorretos!');
             } else {
               console.log(response.data.resp);

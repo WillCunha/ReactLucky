@@ -70,6 +70,7 @@ export default function Signup() {
             const dadosSobrenome = sobrenome;
             const dadosCep = cep;
             const dadosPass = password;
+            const dadosPlataforma = "lucky";
             try {
                 await axios.post(url, {
                     telefone: dadosTelefone,
@@ -78,7 +79,8 @@ export default function Signup() {
                     nome: dadosNome,
                     sobrenome: dadosSobrenome,
                     cep: dadosCep,
-                    pass: dadosPass
+                    pass: dadosPass,
+                    register_type: dadosPlataforma
                 })
                     .then(response => {
                         return <Redirect href='/login'/>
