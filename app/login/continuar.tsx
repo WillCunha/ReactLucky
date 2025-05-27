@@ -12,12 +12,12 @@ export default function ContinuarScreen() {
     const route = useRoute<any>();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-    const {signIn} = useAuth();
+    const { socialSignIn } = useAuth();
 
-    const { name, email, photo, register_type } = route.params;
+    const { name, email, photo, plataforma, plataformas } = route.params;
 
     const nameParts = name ? name.split(/\s+/) : [];
-    const first_name = nameParts[0] || "";
+    const nome = nameParts[0] || "";
     const second_name = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
     const validatePhone = (phone: string): boolean => /^\d{11}$/.test(phone);
@@ -55,14 +55,20 @@ export default function ContinuarScreen() {
                     telefone: phone,
                     email,
                     cpf,
-                    pass: " ", 
-                    nome: first_name,
+                    pass: " ",
+                    nome: nome,
                     sobrenome: second_name,
+                    photo: photo,
                     cep,
-                    register_type: register_type
+                    register_type: plataforma
+                }).then(response => {
+                    const id = response.data.resp;
+                    console.log(response.data.resp);
+                    console.warn("id: " + id)
+                    const dados = [{ id, phone, email, cpf, nome, second_name, cep, photo, plataforma, plataformas }]
+                    socialSignIn(email, ' ', plataforma, dados)
                 });
-                const dados = [{phone, email, cpf, first_name, second_name, cep, register_type}]
-                signIn(email, ' ', register_type, dados)
+
             } catch (error) {
                 console.log(error);
                 Alert.alert('❌ Erro ao cadastrar', 'Tente novamente mais tarde.');
@@ -88,9 +94,9 @@ export default function ContinuarScreen() {
                     />
                 </View>
                 <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
-                    <View style={{ padding: 25, width: '100%', marginTop: '5%', minHeight: '100%' ,backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} >
+                    <View style={{ padding: 25, width: '100%', marginTop: '5%', minHeight: '100%', backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} >
                         <Text style={styles.textsH1}>CRIAR CONTA LUCKY</Text>
-                        <Text style={{ color: '#717171', fontWeight: '600', fontSize: 14, marginTop: '2%', marginBottom: '7%' }}>{first_name}, antes de continuar, é necessário que você nos dê apenas 03 informações.</Text>
+                        <Text style={{ color: '#717171', fontWeight: '600', fontSize: 14, marginTop: '2%', marginBottom: '7%'}}><Text style={{textTransform: 'capitalize'}}>{nome}</Text>, antes de continuar, é necessário que você nos dê apenas 03 informações.</Text>
                         <KeyboardAvoidingView behavior="padding">
                             <Text style={{ color: '#717171', fontWeight: '600' }}>CPF:</Text>
                             <TextInput

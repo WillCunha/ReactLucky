@@ -51,7 +51,7 @@ export default function LoginScreen() {
                 console.log("email" + user?.email)
                 const { name, email, photo } = user;
 
-                navigation.navigate('Continuar', { name, email, photo, plataforma: 'google' });
+                navigation.navigate('Continuar', { name, email, photo, register_type: 'google' });
                 
             } else {
                 Alert.alert("Login cancelado.");

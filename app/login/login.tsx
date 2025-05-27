@@ -1,4 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
     GoogleSignin,
     isErrorWithCode,
@@ -6,7 +7,6 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -52,17 +52,18 @@ export default function LoginScreen() {
             console.log(info.data);
             if (user?.email) {
                 try {
-                    const url = 'https://api.wfsoft.com.br/wf-lucky/api/lucky/login?Google';
+                    const url = 'https://api.wfsoft.com.br/wf-lucky/api/lucky/login/Google';
                     await axios.post(url, {
                         email: user?.email,
                     }).then(response => {
                         console.log(response.data.resp)
                         if (response.data.resp == 400) {
                             const { name, email, photo } = user;
-                            navigation.navigate('Continuar', { name, email, photo, plataforma: 'Google' });
-                        }else{
+                            const plataformas = 0;
+                            navigation.navigate('Continuar', { name, email, photo, plataforma: 'Google', plataformas });
+                        } else {
                             const data = response.data.resp;
-                            signIn(email, 'Google', ' ', data)
+                            socialSignIn(email, 'Google', ' ', data)
                         }
                     })
                 } catch (error) {
@@ -87,18 +88,6 @@ export default function LoginScreen() {
                         setError(err.code);
                 }
             }
-        }
-    };
-
-
-
-    const signOutWithGoogle = async () => {
-        try {
-            await GoogleSignin.signOut();
-            setUserInfo(null);
-            console.log("SAIU!")
-        } catch (error) {
-            console.error(error);
         }
     };
 
@@ -137,6 +126,8 @@ export default function LoginScreen() {
                             email: result.email,
                             picture: result.picture.data.url,
                         });
+
+                        console.log(userInfo);
                     }
                 }
             );
@@ -148,14 +139,25 @@ export default function LoginScreen() {
     };
 
 
-    const { signIn } = useAuth();
+    const { socialSignIn } = useAuth();
 
     function handleLogin() {
-        signIn(email, password, 'Lucky');
+        signIn(email, password);
+        console.log(password);
     }
 
     const alternarVisibilidade = () => {
         setMostrarSenha(!mostrarSenha);
+    };
+
+    const signOutWithGoogle = async () => {
+        try {
+            await GoogleSignin.signOut();
+            AsyncStorage.removeItem('WF_LUCKY');
+            console.log("SAIU!")
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -240,23 +242,13 @@ export default function LoginScreen() {
                     <TouchableOpacity onPress={handleLogin} style={styles.button}>
                         <Text style={styles.buttonTxt}> Entrar </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesG}>
-                        <Image source={require('../../assets/images/gIcon.png')} style={styles.iconSocial} />
-                        <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={signOutWithGoogle} style={styles.buttonRedesG}>
-                        <Image source={require('../../assets/images/gIcon.png')} style={styles.iconSocial} />
-                        <Text style={styles.buttonTxtG}> SAIR com o Google </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={signInWithFacebook} style={styles.buttonRedesF}>
-                        <Image source={require('../../assets/images/fIcon.png')} style={styles.iconSocial} />
-                        <Text style={styles.buttonTxtF}> Continuar com o Facebook </Text>
-                    </TouchableOpacity>
+
+
 
                     {carregando ? (
                         <ActivityIndicator size={"small"} style={{ margin: 20 }} />
                     ) : (
-                        <Link style={{ marginTop: "10%" }} href="/register">
+                        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                             <Text
                                 style={{
                                     color: "#D4D3D8",
@@ -268,8 +260,31 @@ export default function LoginScreen() {
                             >
                                 Não tem uma conta no Lucky ainda? Registrar-se agora!
                             </Text>
-                        </Link>
+                        </TouchableOpacity>
                     )}
+
+                    <View style={styles.divisorOu}>
+                        <View style={styles.line1} />
+                        <Text style={{
+                            color: "#D4D3D8",
+                            fontWeight: "700",
+                            fontSize: 14,
+                            textAlign: "center",
+                        }}>OU</Text>
+                        <View style={styles.line1} />
+                    </View>
+
+                    <View>
+
+                        <TouchableOpacity onPress={signInWithGoogle} style={styles.buttonRedesG}>
+                            <Image source={require('../../assets/images/gIcon.png')} style={styles.iconSocial} />
+                            <Text style={styles.buttonTxtG}> Continuar com o Google </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={signInWithFacebook} style={styles.buttonRedesF}>
+                            <Image source={require('../../assets/images/fIcon.png')} style={styles.iconSocial} />
+                            <Text style={styles.buttonTxtF}> Continuar com o Facebook </Text>
+                        </TouchableOpacity>
+                    </View>
                 </KeyboardAvoidingView>
             </View>
         </View>
@@ -368,5 +383,19 @@ const styles = StyleSheet.create({
     iconSocial: {
         maxWidth: 22,
         maxHeight: 22,
+    },
+    divisorOu: {
+        width: '100%',
+        marginTop: '10%',
+        marginBottom: '10%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center'
+    },
+    line1: {
+        borderBottomColor: '#D4D3D8',
+        borderBottomWidth: 2,
+        width: '40%',
     }
 });

@@ -1,13 +1,16 @@
-import { View, Pressable, Text, StyleSheet, Button } from "react-native";
-import { Ionicons, Feather, AntDesign } from '@expo/vector-icons'
-import { Link, router } from "expo-router";
 import { useAuth } from "@/app/context/Auth";
-import { useEffect, useState } from "react";
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { Link, router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 export default function Header() {
 
-  const {signOut} = useAuth();
+  const [authData, setAuthData] = useState<AuthData>();
+
+  const { signOut } = useAuth();
 
   const getGreeting = (): string => {
     const currentHour = new Date().getHours();
@@ -21,7 +24,7 @@ export default function Header() {
     }
   };
 
-  const [userData, setUserData] = useState<{ nome: string; plataformas: string } | null>(null);
+  const [userData, setUserData] = useState<{ nome: string; plataformas: string, plataforma: string, register_type: string, photo: string } | null>(null);
   const [greeting, setGreeting] = useState<string>(getGreeting());
 
   useEffect(() => {
@@ -44,7 +47,10 @@ export default function Header() {
         if (Array.isArray(jsonData) && jsonData.length > 0) {
           setUserData({
             nome: jsonData[0].nome,
-            plataformas: jsonData[0].plataformas
+            plataformas: jsonData[0].plataformas,
+            plataforma: jsonData[0].plataforma,
+            register_type: jsonData[0].register_type,
+            photo: jsonData[0].photo,
           });
         } else {
           console.warn("Formato de dados inválido no AsyncStorage");
@@ -72,11 +78,35 @@ export default function Header() {
     }
   }, [userData]);
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '515317620527-g6eikuir369gdcvmc868ljng30j9qsvn.apps.googleusercontent.com', // obtido no console do Google
+      iosClientId: 'com.googleusercontent.apps.515317620527-07o9rcbq0mnl78i47mh8n7v88hn3enbi'
+    });
+  }, []);
+
+
+  const signOutWithGoogle = async () => {
+    try {
+      await GoogleSignin.signOut();
+      signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerUser}>
         <View style={styles.btnIconUser}>
-          <AntDesign name="user" size={24} color="#fff" />
+          {userData ?
+            <Image
+              style={{ width: 50, height: 50, borderRadius: 50 }}
+              source={{ uri: userData?.photo }}
+            />
+            :
+            <AntDesign name="user" size={24} color="#fff" />
+          }
         </View>
       </View>
       <View style={styles.headerLeft}>
@@ -89,7 +119,11 @@ export default function Header() {
           </Link>
         </View>
         <View style={styles.btnCartCircle}>
-            <AntDesign name="logout" size={24} color="#404B51" onPress={signOut} /> 
+          {userData?.plataforma || userData?.register_type == 'Google' ?
+            <AntDesign name="logout" size={24} color="#404B51" onPress={signOutWithGoogle} />
+            :
+            <AntDesign name="logout" size={24} color="#404B51" onPress={signOut} />
+          }
         </View>
       </View>
     </View>
@@ -140,13 +174,14 @@ const styles = StyleSheet.create({
 
   },
   headerTx: {
-    fontSize: 22,
+    fontSize: 18,
     color: '#404B51',
     fontFamily: 'Poppins_600SemiBold',
-    letterSpacing: -1.5,
+    letterSpacing: -0.5,
     fontWeight: 800,
     width: 'auto',
-    textAlign: 'left'
+    textAlign: 'left',
+    textTransform: 'capitalize'
   },
   btnCartCircle: {
     backgroundColor: '#fff',

@@ -1,15 +1,10 @@
-import { Image, StyleSheet, Platform, Text, View, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
-import Constants from "expo-constants";
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/app/context/Auth';
 import Header from '@/src/components/header';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
 import Mid from '@/src/components/mid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from "expo-constants";
+import { useEffect, useState } from 'react';
+import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 
 export default function HomeScreen() {
 
@@ -30,6 +25,8 @@ export default function HomeScreen() {
         }
 
         const jsonData = JSON.parse(jsonString); // Parseando os dados
+
+        console.log(JSON.stringify(jsonData));
 
         if (Array.isArray(jsonData) && jsonData.length > 0) {
           setUserData({

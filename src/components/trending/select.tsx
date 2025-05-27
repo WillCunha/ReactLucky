@@ -1,9 +1,9 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import { router } from 'expo-router';
-import React, { useState, useEffect } from 'react';
-import { FlatList, Text, TouchableOpacity, StyleSheet, View, Image, StatusBar, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface Item {
   id: number;
@@ -12,6 +12,9 @@ interface Item {
 }
 
 const ListaPlataformas = () => {
+
+  const navigation = useNavigation();
+
   const [dataTodos, setDataTodos] = useState<Item[]>([]);
   const [dataSelecionados, setDataSelecionados] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -157,7 +160,7 @@ const ListaPlataformas = () => {
         } catch (error) {
           console.error('Error:', error);
         }
-        router.navigate('/(drawer)/(tabs)');
+        navigation.navigate('HomeScreen');
       }
     } catch (e: any) {
       setError(e.message);

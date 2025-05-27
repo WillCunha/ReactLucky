@@ -11,7 +11,8 @@ export interface AuthData {
 
 interface AuthContextData {
   authData?: AuthData;
-  signIn: (email: string, plataforma: string, password?: string | null,  dados?: Array<any> | null) => Promise<void>;
+  signIn: (email: string, password: string ) => Promise<void>;
+  socialSignIn: (email: string, plataforma: string, password?: string | null,  dados?: Array<any> | null) => Promise<void>;
   signOut: () => Promise<void>;
   isLoading: boolean;
 }
@@ -42,7 +43,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }
 
-  async function signIn(email: string,  plataforma: string, password?: string | null, data?: Array<any> | null) {
+  async function socialSignIn(email: string,  plataforma: string, password?: string | null, data?: Array<any> | null) {
 
     if (plataforma == 'Google' || 'Facebook') {
       AsyncStorage.setItem('WF_LUCKY', JSON.stringify(data));
@@ -50,25 +51,31 @@ export const AuthProvider: React.FC = ({ children }) => {
       setisLoading(false);
     }
 
-    else if ( plataforma == 'Lucky' && email !== '' && password !== '') {
+  }
 
-      const url = 'https://api.wfsoft.com.br/wf-lucky/api/lucky/login';
+  async function signIn(email: string,  password: string) {
+
+     if (  email !== '' && password !== '') {
+
+      const url = 'https://api.wfsoft.com.br/wf-lucky/api/lucky/login/Lucky';
       const username = email;
       const pass = password;
 
+      console.log("DADOS " + "email: " + email + " password: " + password )
 
       try {
+        console.log("iniciando a comunicação com o servidor.")
         await axios.post(url, {
           telefone: username,
           pass: pass
         })
           .then(response => {
-            console.log(response.data.resp);
+            console.warn(response.data.resp);
             if (response.data.resp == 400) {
 
               Alert.alert('Erro: ', 'Número de telefone ou senha incorretos!');
             } else {
-              console.log(response.data.resp);
+              console.warn(response.data.resp);
               AsyncStorage.setItem('WF_LUCKY', JSON.stringify(response.data.resp));
               setAuthData(response.data.resp);
               setisLoading(false);
@@ -89,7 +96,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ authData, signIn, signOut, isLoading }}>
+    <AuthContext.Provider value={{ authData, signIn, socialSignIn, signOut, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

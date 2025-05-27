@@ -4,7 +4,7 @@
   <string name="expo_runtime_version">1.0.1</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
-  <string name="facebook_app_id">428664706881612</string>
-  <string name="fb_login_protocol_scheme">fb428664706881612</string>
-  <string name="facebook_client_token">2461fea456d27dcf8c2b39efb8f2ec15</string>
+  <string name="facebook_app_id">725532496715825</string>
+  <string name="fb_login_protocol_scheme">fb725532496715825</string>
+  <string name="facebook_client_token">885777a9826f817fd84fc38e6e4f0888</string>
 </resources>
