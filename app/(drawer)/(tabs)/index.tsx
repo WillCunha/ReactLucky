@@ -17,7 +17,7 @@ export default function HomeScreen() {
     const fetchData = async () => {
       try {
         const jsonString = await AsyncStorage.getItem("WF_LUCKY"); // Pegando os dados do AsyncStorage
-       
+
 
         if (!jsonString) {
           console.warn("Nenhum dado encontrado no AsyncStorage");
@@ -33,7 +33,7 @@ export default function HomeScreen() {
             nome: jsonData[0].nome,
             plataformas: jsonData[0].plataformas
           });
-        } else { 
+        } else {
           console.warn("Formato de dados inválido no AsyncStorage");
         }
       } catch (error) {
@@ -43,7 +43,7 @@ export default function HomeScreen() {
     };
     fetchData();
 
-  
+
   }, []);
 
 
@@ -53,7 +53,12 @@ export default function HomeScreen() {
       showsVerticalScrollIndicator={false}
     >
       <View className='w-full px-4' style={{ marginTop: statusBarHeight + 8, marginBottom: '3%' }}>
-        <><StatusBar backgroundColor="#3CAF54" barStyle="light-content" /><Header />< Mid /></>
+        <>
+        <StatusBar backgroundColor="#3CAF54" translucent={false} barStyle="light-content" />
+        
+        <Header />
+        < Mid />
+        </>
 
       </View>
     </ScrollView>

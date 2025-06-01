@@ -41,6 +41,7 @@ export default function ContinuarScreen() {
     const [phone, setPhone] = useState('');
     const [cpf, setCpf] = useState('');
     const [carregando, setCarregando] = useState(false);
+    const [erro, setErro] = useState('');
 
     async function handleValidation() {
         const isPhoneValid = validatePhone(phone);
@@ -62,11 +63,16 @@ export default function ContinuarScreen() {
                     cep,
                     register_type: plataforma
                 }).then(response => {
-                    const id = response.data.resp;
-                    console.log(response.data.resp);
-                    console.warn("id: " + id)
-                    const dados = [{ id, phone, email, cpf, nome, second_name, cep, photo, plataforma, plataformas }]
-                    socialSignIn(email, ' ', plataforma, dados)
+                    if (response.data.resp.status == 'erro') {
+                        console.log(response.data.resp);
+                        setErro(response.data.resp.mensagem)
+                    } else if (response.data.resp.status == 'ok') {
+                        const id = response.data.resp.id;
+                        console.log(response.data.resp.id);
+                        console.warn("id: " + id)
+                        const dados = [{ id, phone, email, cpf, nome, second_name, cep, photo, plataforma, plataformas }]
+                        socialSignIn(email, ' ', plataforma, dados)
+                    }
                 });
 
             } catch (error) {
@@ -96,7 +102,7 @@ export default function ContinuarScreen() {
                 <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
                     <View style={{ padding: 25, width: '100%', marginTop: '5%', minHeight: '100%', backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} >
                         <Text style={styles.textsH1}>CRIAR CONTA LUCKY</Text>
-                        <Text style={{ color: '#717171', fontWeight: '600', fontSize: 14, marginTop: '2%', marginBottom: '7%'}}><Text style={{textTransform: 'capitalize'}}>{nome}</Text>, antes de continuar, é necessário que você nos dê apenas 03 informações.</Text>
+                        <Text style={{ color: '#717171', fontWeight: '600', fontSize: 14, marginTop: '2%', marginBottom: '7%' }}><Text style={{ textTransform: 'capitalize' }}>{nome}</Text>, antes de continuar, é necessário que você nos dê apenas 03 informações.</Text>
                         <KeyboardAvoidingView behavior="padding">
                             <Text style={{ color: '#717171', fontWeight: '600' }}>CPF:</Text>
                             <TextInput
@@ -130,6 +136,8 @@ export default function ContinuarScreen() {
                                 style={styles.button}>
                                 <Text style={styles.buttonTxt}>CONTINUAR</Text>
                             </TouchableOpacity>
+
+                            <Text style={{ color: '#cc0000', fontWeight: '800' }}>{erro}</Text>
 
                             {carregando && (
                                 <ActivityIndicator size={'small'} style={{ margin: 20 }} />

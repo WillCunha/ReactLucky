@@ -1,17 +1,22 @@
+import { RootStackParamList } from '@/app/routes/Routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Link } from 'expo-router';
-import react, { useEffect, useState } from 'react';
-import { Text, Image, View, StatusBar, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+//import * as Clipboard from 'expo-clipboard';
+import { useEffect, useState } from 'react';
+import { Image, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 
 
 const Congrats = () => {
 
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const [userData, setUserData] = useState<{ nome: string; id: string, plataformas: number } | null>(null);
     const [gift, setGift] = useState<{ nome: string; id: string, valor: string, codigo: string } | null>(null);
-    const [isVisible, setIsVisible] = useState(false);
-    const [imageLoaded, setImageLoaded] = useState(false);
+    const [chave, setChave] = useState("");
     const [randomNumber, setRandomNumber] = useState<number | null>(null);
+    const [error, setError] = useState("");
 
     const images = {
         1: require('../../../assets/images/congrats-1.png'),
@@ -64,7 +69,7 @@ const Congrats = () => {
 
         fetchApi();
     }, [userData]);
-    
+
 
 
     // Função para gerar um número aleatório entre 1 e 5
@@ -77,33 +82,132 @@ const Congrats = () => {
         generateRandomNumber();
     }, []);
 
+    // const copiarParaAreaTransferencia = async () => {
+    //     await Clipboard.setStringAsync(gift?.codigo)
+    //     Alert.alert('Texto copiado!');
+    // };
+
+    async function enviaChave() {
+        const url = 'https://api.wfsoft.com.br/wf-lucky/api/lucky/chave/adicionar';
+        try {
+            await axios.post(url, {
+                chave: chave,
+                valor: gift?.valor,
+                id_user: userData?.id
+            })
+                .then(response => {
+                    console.log(response.data.resp)
+                    if (response.data.resp == 200) {
+                        navigation.navigate('HomeScreen')
+                    } else {
+                        setError(JSON.stringify(response));
+                    }
+                })
+        } catch (error) {
+            console.log(error)
+            setError(JSON.stringify(error));
+        }
+    }
+
     return (
         <View>
-            <StatusBar backgroundColor="#3CAF54" barStyle="light-content" />
-            <View style={Styles.imageContent}>
-                <Image
-                    source={images[randomNumber]}
-                    resizeMode='contain'
-                    style={{ maxWidth: '100%', maxHeight: 400 }} />
-            </View>
-            <View style={Styles.mainContent}>
-                <Text style={Styles.txtHeader}>PARABÉNS, {userData?.nome}!</Text>
-                <Text style={Styles.txtContent}>Você ganhou um gift cart do(a) <Text style={Styles.txtSpan}>{gift?.nome}</Text>.</Text>
-            </View>
-            <View style={Styles.premioContent}>
-                <Text style={Styles.premioValor}>
-                    R$ {gift?.valor}
-                </Text>
-            </View>
-            <View style={Styles.mainContent}>
-                <Text style={Styles.txtP}>Abra a sua carteira no aplicativo "{gift?.nome}", localize um botão que possa ter o
-                    seguinte texto: Resgatar gift card. Ao continuar, não é possível recuperar o código. </Text>
-            </View>
-            <View style={Styles.mainContent}>
-                <Text style={Styles.txtHeader2}>CÓDIGO DO GIFT CARD:</Text>
-                <Text style={Styles.txtContent}>{gift?.codigo} | ( ID: {gift?.id} )</Text>
-                <Link href="/(drawer)/(tabs)" style={Styles.button} >Continuar</Link>
-            </View>
+            <StatusBar backgroundColor="#3CAF54" translucent={false} barStyle="light-content" />
+            <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+                <View style={Styles.imageContent}>
+                    <Image
+                        source={images[randomNumber]}
+                        resizeMode='contain'
+                        style={{ maxWidth: '100%', maxHeight: 400 }} />
+                </View>
+                <View style={Styles.mainContent}>
+                    {
+                        gift?.nome === 'PIX' ? (
+                            <Text style={[Styles.txtHeader, { fontSize: 26, letterSpacing: -1 }]}>{userData?.nome},
+                                você ganhou um...</Text>
+                        ) : (
+                            <Text style={[Styles.txtHeader, { fontSize: 30 }]}>PARABÉNS, {userData?.nome}!</Text>
+                        )
+                    }
+
+                    {
+                        gift?.nome === 'PIX' ? (
+                            <Text style={[Styles.txtContent, { fontSize: 28, letterSpacing: -1 }]}>
+                                <Text style={Styles.txtSpan}>{gift?.nome}</Text>.
+                            </Text>
+                        ) : (
+                            <Text style={[Styles.txtContent, { fontSize: 18, letterSpacing: -1 }]}>
+                                Você ganhou um gift cart do(a) <Text style={Styles.txtSpan}>{gift?.nome}</Text>.
+                            </Text>
+                        )
+                    }
+                </View>
+                <View style={Styles.premioContent}>
+                    <Text style={Styles.premioValor}>
+                        R$ {gift?.valor}
+                    </Text>
+                </View>
+                <View style={Styles.mainContent}>
+
+                    {
+                        gift?.nome === 'PIX' ? (
+                            <Text style={Styles.txtP}>
+                                Informe sua chave PIX no campo abaixo. O valor será creditado na conta no prazo de 2 horas.</Text>
+                        ) : (
+                            <Text style={Styles.txtP}>
+                                Abra a sua carteira no aplicativo "{gift?.nome}", localize um botão que possa ter o
+                                seguinte texto: Resgatar gift card. Ao pressionar em "Continuar", não é possível recuperar o código. </Text>
+                        )
+                    }
+
+                </View>
+
+
+                {
+                    gift?.nome === 'PIX' ? (
+                        <View style={Styles.mainContent}>
+                            <Text style={Styles.txtSpan}>Chave PIX:</Text>
+                            <TextInput
+                                style={Styles.input}
+                                value={chave}
+                                onChangeText={setChave}
+                                autoCapitalize="none"
+                                placeholder="Informe a chave."
+                            />
+                            <TouchableOpacity
+                                style={Styles.btn}
+                                onPress={() => enviaChave()}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#fff' }}>
+                                    CONTINUAR
+                                </Text>
+                            </TouchableOpacity>
+
+                            <Text style={[Styles.txtContent, { fontSize: 12, marginTop: '5%' }]}><Text style={[Styles.txtSpan, { fontSize: 12 }]}>Atenção! </Text>Ao pressionar em "Continuar",
+                                se a chave informada estiver incorreta, entraremos em contato por meio do e-mail da conta. Se não obtermos um retorno em até 24h, o prêmio será perdido.
+                            </Text>
+
+                        </View>
+                    ) : (
+                        <View style={Styles.mainContent}>
+                            <Text style={Styles.txtHeader2}>CÓDIGO DO GIFT CARD:</Text>
+                            <View style={Styles.codigoContent}>
+                                <Text style={[Styles.txtContentCodigo, { fontSize: 18, letterSpacing: -1, textAlign: 'center' }]}>{gift?.codigo}</Text>
+                            </View>
+                            <TouchableOpacity
+                                style={Styles.btn}
+                                onPress={() => navigation.navigate('HomeScreen')}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#fff' }}>
+                                    CONTINUAR
+                                </Text>
+                            </TouchableOpacity>
+
+                            <Text style={{ textAlign: 'center', color: '#cc0000', fontSize: 12, fontWeight: 800 }}>{error}</Text>
+
+                        </View>
+                    )
+                }
+
+
+            </ScrollView>
         </View>
     )
 
@@ -119,7 +223,7 @@ const Styles = StyleSheet.create({
     },
     mainContent: {
         textAlign: 'center',
-        padding: 20,
+        padding: 15,
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center'
@@ -134,7 +238,6 @@ const Styles = StyleSheet.create({
     txtHeader: {
         textAlign: 'center',
         width: '100%',
-        fontSize: 30,
         fontWeight: 900,
         color: '#191820',
         textTransform: 'uppercase',
@@ -149,14 +252,18 @@ const Styles = StyleSheet.create({
     },
     txtContent: {
         textAlign: 'center',
-        width: '100%',
-        fontSize: 18,
         fontWeight: 500,
         color: '#191820',
-        letterSpacing: -1
+
+    },
+    txtContentCodigo: {
+        textAlign: 'center',
+        fontWeight: 500,
+        color: '#191820',
+        width: '100%',
+        alignItems: 'center',
     },
     txtSpan: {
-        fontSize: 18,
         fontWeight: 900,
         color: '#191820',
         letterSpacing: -0.5
@@ -173,20 +280,44 @@ const Styles = StyleSheet.create({
         fontSize: 14,
         color: '#191820'
     },
-    button: {
+    btn: {
         backgroundColor: '#3CAF54',
-        color: '#fff',
-        width: '80%',
-        minHeight: 50,
-        borderRadius: 10,
-        textAlign: 'center',
-        fontSize: 20,
-        fontWeight: 800,
-        display: 'flex',
-        flexDirection: 'column',
+        flex: 1,
+        height: 50,
+        borderRadius: 5,
         justifyContent: 'center',
-        alignSelf: 'center',
-        paddingTop: '2%',
-        marginTop: '3%',
+        alignItems: 'center',
+        width: '100%',
+        color: '#fff'
+    },
+    btnCopiar: {
+        flex: 1,
+        minHeight: 35,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        maxWidth: 70,
+        borderWidth: 2,
+        borderColor: '#3CAF54'
+    },
+    input: {
+        width: "100%",
+        marginVertical: 4,
+        height: 50,
+        borderWidth: 2,
+        borderRadius: 4,
+        padding: 10,
+        backgroundColor: "#fff",
+        borderColor: "#F5F5F5",
+        marginBottom: "4%",
+    },
+    codigoContent: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        minHeight: 80,
+        maxHeight: 80,
     }
 })

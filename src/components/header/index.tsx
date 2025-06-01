@@ -1,12 +1,17 @@
 import { useAuth } from "@/app/context/Auth";
+import { RootStackParamList } from "@/app/routes/Routes";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { Link, router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 export default function Header() {
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [authData, setAuthData] = useState<AuthData>();
 
@@ -114,9 +119,9 @@ export default function Header() {
       </View>
       <View style={styles.headerRight}>
         <View style={styles.btnCartCircle}>
-          <Link href={'/explore'}>
-            <Ionicons name="list" size={24} color="#404B51" />
-          </Link>
+
+          <Ionicons name="list" size={24} color="#404B51" onPress={() => navigation.navigate('ListaPlataformas')} />
+
         </View>
         <View style={styles.btnCartCircle}>
           {userData?.plataforma || userData?.register_type == 'Google' ?

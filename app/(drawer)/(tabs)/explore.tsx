@@ -11,12 +11,13 @@ import { RootStackParamList } from '../../routes/Routes';
 interface Item {
   id: number;
   nome: string;
+  obs: string;
   status: string
 }
 
 const ListaPlataformas = () => {
 
-  
+
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [dataTodos, setDataTodos] = useState<Item[]>([]);
@@ -24,7 +25,7 @@ const ListaPlataformas = () => {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [response, setResponse] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const [userData, setUserData] = useState<{ nome: string; id: string, plataformas: number } | null>(null);
+  const [userData, setUserData] = useState<{ nome: string; id: string, plataformas: number, obs: string } | null>(null);
 
 
   useEffect(() => {
@@ -43,7 +44,8 @@ const ListaPlataformas = () => {
           setUserData({
             id: jsonData[0].id,
             nome: jsonData[0].nome,
-            plataformas: jsonData[0].plataformas
+            plataformas: jsonData[0].plataformas,
+            obs: jsonData[0].obs
           });
         } else {
           console.warn("Formato de dados inválido no AsyncStorage");
@@ -57,7 +59,7 @@ const ListaPlataformas = () => {
   }, []);
 
   useEffect(() => {
-    if(!userData) return;
+    if (!userData) return;
     const fetchApi = async () => {
       try {
         const response = await fetch('https://api.wfsoft.com.br/wf-lucky/api/lucky/plataformas/');
@@ -82,7 +84,7 @@ const ListaPlataformas = () => {
             console.log(item)
             idsParaSelecionar.push(item.plataformas_id);
           });
-          
+
           console.log(idsParaSelecionar)
           setSelectedItems(idsParaSelecionar);
         } catch (error) {
@@ -109,6 +111,7 @@ const ListaPlataformas = () => {
     const isSelected = selectedItems.includes(item.id);
 
     return (
+
       <TouchableOpacity
         style={[styles.item, isSelected && styles.selectedItem]}
         onPress={() => handleSelectItem(item.id)}
@@ -131,81 +134,75 @@ const ListaPlataformas = () => {
             fontWeight: 900,
             color: '#000'
           }}>{item.nome}</Text>
+          {item.obs ? <Text style={{fontSize: 12,fontWeight: 600,color: '#000'}}>{item.obs}</Text> : <Text></Text>}
         </View>
-        <View>
-          <Text></Text>
-        </View>
-      </TouchableOpacity>
+      </TouchableOpacity >
     );
   };
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
 
-    try {
-      const result = await axios.post(
-        'https://api.wfsoft.com.br/wf-lucky/api/lucky/add-plataforma/' + userData?.id,
-        selectedItems,
-      );
-      setResponse(result.data);
-      setError(null);
-      router.push('/');
-      if (result.data.resp == 200) {
-        try {
-          const storedData = await AsyncStorage.getItem('WF_LUCKY');
+  console.log('id do user ' + JSON.stringify(userData?.id))
 
-          if (storedData) {
-            const users = JSON.parse(storedData);
-            users[0].plataformas = selectedItems.length;
+  try {
+    const result = await axios.post(
+      'https://api.wfsoft.com.br/wf-lucky/api/lucky/add-plataforma/' + userData?.id,
+      selectedItems,
+    );
+    setResponse(result.data);
+    setError(null);
+    router.push('/');
+    if (result.data.resp == 200) {
+      try {
+        const storedData = await AsyncStorage.getItem('WF_LUCKY');
 
-            await AsyncStorage.setItem('WF_LUCKY', JSON.stringify(users));
+        if (storedData) {
+          const users = JSON.parse(storedData);
+          users[0].plataformas = selectedItems.length;
 
-          } else {
-            console.log('Nenhum usuário encontrado no AsyncStorage.');
-          }
-        } catch (error) {
-          console.error('Error:', error);
+          await AsyncStorage.setItem('WF_LUCKY', JSON.stringify(users));
+
+        } else {
+          console.log('Nenhum usuário encontrado no AsyncStorage.');
         }
-        console.log("ERA PRA IR!")
-        router.push('/');
+      } catch (error) {
+        console.error('Error:', error);
       }
-    } catch (e: any) {
-      setError(e.message);
-      setResponse(null);
+      console.log("ERA PRA IR!")
+      router.push('/');
     }
+  } catch (e: any) {
+    setError(e.message);
+    setResponse(null);
+  }
 
 
-  };
+};
 
-  return (
+return (
 
-    <View style={{ padding: '5%' }}>
-      <StatusBar backgroundColor="#3CAF54" barStyle="light-content" />
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Selecione suas plataformas</Text>
-          <Text style={styles.headerText}>{userData?.nome}, escolha as plataformas que você utiliza atualmente. Você pode habilitar
-            outras plataformas futuramente, assim como, desativa-las. </Text>
-        </View>
-        <FlatList
-          data={dataTodos}
-          renderItem={renderItem}
-          keyExtractor={(item) => String(item.id)}
-          extraData={selectedItems}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
-        {error && (
-          <View>
-            <Text>Erro:</Text>
-            <Text>{error}!</Text>
-          </View>
-        )}
-      </ScrollView>
-    </View>
-  );
+  <View style={{ padding: '5%' }}>
+    <StatusBar backgroundColor="#3CAF54" translucent={false}  barStyle="dark-content" />
+    <ScrollView
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Selecione suas plataformas</Text>
+        <Text style={styles.headerText}>{userData?.nome}, escolha as plataformas que você utiliza atualmente. Você pode habilitar
+          outras plataformas futuramente, assim como, desativa-las. </Text>
+      </View>
+      <FlatList
+        data={dataTodos}
+        renderItem={renderItem}
+        keyExtractor={(item) => String(item.id)}
+        extraData={selectedItems}
+      />
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Salvar</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  </View>
+);
 };
 
 const styles = StyleSheet.create({
@@ -228,7 +225,7 @@ const styles = StyleSheet.create({
     width: '30%'
   },
   txtNome: {
-    width: '70%',
+    width: '75%',
   },
   item: {
     padding: 15,

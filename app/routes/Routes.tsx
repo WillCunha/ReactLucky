@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Text, View } from 'react-native';
 import HomeScreen from '../(drawer)/(tabs)';
+import CongratsScreen from '../(drawer)/(tabs)/congrats';
 import ListaPlataformas from '../(drawer)/(tabs)/explore';
 import { useAuth } from '../context/Auth';
 import ContinuarScreen from '../login/continuar';
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   Register: undefined;
   HomeScreen: undefined;
   ListaPlataformas: undefined;
+  Congrats: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -36,6 +38,7 @@ export function Router() {
         <>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="ListaPlataformas" component={ListaPlataformas} />
+          <Stack.Screen name="Congrats" component={CongratsScreen} />
         </>
       ) : (
         <>

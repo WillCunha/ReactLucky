@@ -173,7 +173,7 @@ const ListaPlataformas = () => {
   return (
 
     <View style={{ padding: '5%' }}>
-      <StatusBar backgroundColor="#3CAF54" barStyle="light-content" />
+      <StatusBar backgroundColor="#3CAF54" translucent={false}  barStyle="light-content" />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>

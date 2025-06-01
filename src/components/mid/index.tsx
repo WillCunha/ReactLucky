@@ -1,8 +1,13 @@
-import { Link } from 'expo-router';
+import { RootStackParamList } from '@/app/routes/Routes';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 
 const Mid: React.FC = () => {
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   // Estado para o número gerado aleatoriamente
   const [randomNumber, setRandomNumber] = useState<number>(0);
 
@@ -29,6 +34,10 @@ const Mid: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.infoText}>Escolha o botão! </Text>
+
+      <TouchableOpacity onPress={() => navigation.navigate('Congrats')}>
+          <Text>Clica!</Text>
+         </TouchableOpacity>
 
       {[1, 2, 3, 4, 5].map((buttonNumber) => (
         <TouchableOpacity

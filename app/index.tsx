@@ -31,7 +31,8 @@ function App() {
     return (
         
         <AuthProvider>
-        <StatusBar backgroundColor="#3CAF54" barStyle="light-content" />    
+        <StatusBar backgroundColor="#3CAF54" translucent={false}  barStyle="light-content" />    
+       
                 {isAppFirstLaunched ? <OnboardingScreen /> : <Router />}
             
         </AuthProvider>

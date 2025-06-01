@@ -1,8 +1,7 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-import ListaPlataformas from '@/src/components/trending/select';
 import Congrats from '@/src/components/congrats';
+import { StyleSheet } from 'react-native';
 
-export default function TabTwoScreen() {
+export default function CongratsScreen() {
   return (
     
    <Congrats /> 
