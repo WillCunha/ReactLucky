@@ -1,3 +1,4 @@
+import Gratidao from '@/src/components/gratidao';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Text, View } from 'react-native';
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   HomeScreen: undefined;
   ListaPlataformas: undefined;
   Congrats: undefined;
+  Gratidao: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -39,6 +41,7 @@ export function Router() {
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="ListaPlataformas" component={ListaPlataformas} />
           <Stack.Screen name="Congrats" component={CongratsScreen} />
+          <Stack.Screen name="Gratidao" component={Gratidao} />
         </>
       ) : (
         <>

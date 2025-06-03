@@ -35,7 +35,7 @@ const Mid: React.FC = () => {
     <View style={styles.container}>
       <Text style={styles.infoText}>Escolha o botão! </Text>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Congrats')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Gratidao')}>
           <Text>Clica!</Text>
          </TouchableOpacity>
 

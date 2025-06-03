@@ -5,7 +5,7 @@
     "version": "1.0.1",
     "runtimeVersion": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/logoLucky-150.png",
+    "icon": "./assets/images/logoV2.png",
     "scheme": "lucky",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -19,7 +19,7 @@
     "android": {
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logoLucky-150.png",
+        "foregroundImage": "./assets/images/logoV2.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,

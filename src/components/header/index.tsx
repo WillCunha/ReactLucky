@@ -4,7 +4,6 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useNavigation } from "@react-navigation/native";
-import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
@@ -29,7 +28,7 @@ export default function Header() {
     }
   };
 
-  const [userData, setUserData] = useState<{ nome: string; plataformas: string, plataforma: string, register_type: string, photo: string } | null>(null);
+  const [userData, setUserData] = useState<{ nome: string; plataformas: string, plataforma: string, acesso: string, register_type: string, photo: string } | null>(null);
   const [greeting, setGreeting] = useState<string>(getGreeting());
 
   useEffect(() => {
@@ -56,6 +55,7 @@ export default function Header() {
             plataforma: jsonData[0].plataforma,
             register_type: jsonData[0].register_type,
             photo: jsonData[0].photo,
+            acesso: jsonData[0].acesso
           });
         } else {
           console.warn("Formato de dados inválido no AsyncStorage");
@@ -72,10 +72,17 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    if (userData?.plataformas == "0") {
+    if (userData?.acesso == "0") {
+      const timeout = setTimeout(() => {
+        navigation.navigate('Gratidao');
+      }, 2000); // 2000 milissegundos = 2 segundos
+
+      // cleanup pro caso do componente desmontar antes dos 2 segundos
+      return () => clearTimeout(timeout);
+    } else if (userData?.plataformas == "0") {
 
       const timeout = setTimeout(() => {
-        router.navigate('/explore');
+        navigation.navigate('ListaPlataformas');
       }, 2000); // 2000 milissegundos = 2 segundos
 
       // cleanup pro caso do componente desmontar antes dos 2 segundos

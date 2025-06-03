@@ -61,16 +61,18 @@ export default function ContinuarScreen() {
                     sobrenome: second_name,
                     photo: photo,
                     cep,
-                    register_type: plataforma
+                    register_type: plataforma,
+                    acesso: 0
                 }).then(response => {
                     if (response.data.resp.status == 'erro') {
                         console.log(response.data.resp);
                         setErro(response.data.resp.mensagem)
                     } else if (response.data.resp.status == 'ok') {
                         const id = response.data.resp.id;
+                        const acesso = 0
                         console.log(response.data.resp.id);
                         console.warn("id: " + id)
-                        const dados = [{ id, phone, email, cpf, nome, second_name, cep, photo, plataforma, plataformas }]
+                        const dados = [{ id, phone, email, cpf, nome, second_name, cep, photo, plataforma, plataformas, acesso }]
                         socialSignIn(email, ' ', plataforma, dados)
                     }
                 });
