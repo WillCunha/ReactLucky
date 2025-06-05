@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "515317620527",
+    "project_id": "api-project-515317620527",
+    "storage_bucket": "api-project-515317620527.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515317620527:android:a2d70793a1c4d0a7dc8bda",
+        "android_client_info": {
+          "package_name": "com.willcunha.AppLuckyExpo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "515317620527-2i47pdlih9vjaf3vpvpj7f6khvd42bet.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.willcunha.AppLuckyExpo",
+            "certificate_hash": "1f02761f038cb9ff9592271e068efd4485fad23c"
+          }
+        },
+        {
+          "client_id": "515317620527-g6eikuir369gdcvmc868ljng30j9qsvn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-2Y482lWAcpgsPTHlEC-IfywlxN8wfp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "515317620527-g6eikuir369gdcvmc868ljng30j9qsvn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "515317620527-07o9rcbq0mnl78i47mh8n7v88hn3enbi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.willcunha.AppLuckyExpo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
