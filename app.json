@@ -11,6 +11,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.willcunha.AppLuckyExpo",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -22,6 +23,7 @@
         "foregroundImage": "./assets/images/logoV2.png",
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "edgeToEdgeEnabled": true,
       "package": "com.willcunha.AppLuckyExpo"
     },
@@ -31,6 +33,9 @@
       "favicon": "./assets/images/logoLucky.png"
     },
     "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics",
       [
         "react-native-fbsdk-next",
         {
@@ -54,6 +59,14 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
     ],

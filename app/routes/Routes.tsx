@@ -19,6 +19,7 @@ export type RootStackParamList = {
   ListaPlataformas: undefined;
   Congrats: undefined;
   Gratidao: undefined
+  PushNotification: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,6 +43,7 @@ export function Router() {
           <Stack.Screen name="ListaPlataformas" component={ListaPlataformas} />
           <Stack.Screen name="Congrats" component={CongratsScreen} />
           <Stack.Screen name="Gratidao" component={Gratidao} />
+          <Stack.Screen name="PushNotification" component={PushNotification} />
         </>
       ) : (
         <>
