@@ -9,6 +9,7 @@ import { useAuth } from '../context/Auth';
 import ContinuarScreen from '../login/continuar';
 import LoginScreen from '../login/login';
 import Register from '../login/register';
+import PushNotification from '../PushNotification';
 
 
 export type RootStackParamList = {
