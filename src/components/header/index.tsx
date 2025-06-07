@@ -2,6 +2,7 @@ import { useAuth } from "@/app/context/Auth";
 import { RootStackParamList } from "@/app/routes/Routes";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import messaging from '@react-native-firebase/messaging';
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -13,6 +14,9 @@ export default function Header() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [authData, setAuthData] = useState<AuthData>();
+  const [userData, setUserData] = useState<{ nome: string; plataformas: string, plataforma: string, acesso: string, register_type: string, photo: string } | null>(null);
+  const [greeting, setGreeting] = useState<string>(getGreeting());
+  const [isVisible, setIsVisible] = useState(true);
 
   const { signOut } = useAuth();
 
@@ -28,11 +32,8 @@ export default function Header() {
     }
   };
 
-  const [userData, setUserData] = useState<{ nome: string; plataformas: string, plataforma: string, acesso: string, register_type: string, photo: string } | null>(null);
-  const [greeting, setGreeting] = useState<string>(getGreeting());
-
   useEffect(() => {
-
+    requestUserPermission();
     const intervalId = setInterval(() => {
       setGreeting(getGreeting());
     }, 60000);
@@ -104,6 +105,21 @@ export default function Header() {
       signOut();
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Permissão para notificações:', authStatus);
+      setIsVisible(false);
+    } else {
+      console.warn('Permissão para notificações não concedida');
+      setIsVisible(true);
     }
   };
 
