@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 //import * as Clipboard from 'expo-clipboard';
 import { useEffect, useState } from 'react';
-import { Image, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 
 
@@ -151,11 +151,18 @@ const Congrats = () => {
                     {
                         gift?.nome === 'PIX' ? (
                             <Text style={Styles.txtP}>
-                                Informe sua chave PIX no campo abaixo. O valor será creditado na conta no prazo de 2 horas.</Text>
+
+                                Mas calma... Como o Lucky ainda está em fase Beta, os prêmios ainda não estão disponíveis.
+                                {/* Informe sua chave PIX no campo abaixo. O valor será creditado na conta no prazo de 2 horas. */}
+                                .</Text>
                         ) : (
                             <Text style={Styles.txtP}>
-                                Abra a sua carteira no aplicativo "{gift?.nome}", localize um botão que possa ter o
-                                seguinte texto: Resgatar gift card. Ao pressionar em "Continuar", não é possível recuperar o código. </Text>
+
+                                Mas calma... Como o Lucky ainda está em fase Beta, os prêmios ainda não estão disponíveis.
+
+                                {/* Abra a sua carteira no aplicativo "{gift?.nome}", localize um botão que possa ter o */}
+                                {/* seguinte texto: Resgatar gift card. Ao pressionar em "Continuar", não é possível recuperar o código.  */}
+                            </Text>
                         )
                     }
 
@@ -165,14 +172,14 @@ const Congrats = () => {
                 {
                     gift?.nome === 'PIX' ? (
                         <View style={Styles.mainContent}>
-                            <Text style={Styles.txtSpan}>Chave PIX:</Text>
+                            {/* <Text style={Styles.txtSpan}>Chave PIX:</Text>
                             <TextInput
                                 style={Styles.input}
                                 value={chave}
                                 onChangeText={setChave}
                                 autoCapitalize="none"
                                 placeholder="Informe a chave."
-                            />
+                            /> */}
                             <TouchableOpacity
                                 style={Styles.btn}
                                 onPress={() => enviaChave()}>
@@ -181,16 +188,16 @@ const Congrats = () => {
                                 </Text>
                             </TouchableOpacity>
 
-                            <Text style={[Styles.txtContent, { fontSize: 12, marginTop: '5%' }]}><Text style={[Styles.txtSpan, { fontSize: 12 }]}>Atenção! </Text>Ao pressionar em "Continuar",
+                            {/* <Text style={[Styles.txtContent, { fontSize: 12, marginTop: '5%' }]}><Text style={[Styles.txtSpan, { fontSize: 12 }]}>Atenção! </Text>Ao pressionar em "Continuar",
                                 se a chave informada estiver incorreta, entraremos em contato por meio do e-mail da conta. Se não obtermos um retorno em até 24h, o prêmio será perdido.
-                            </Text>
+                            </Text> */}
 
                         </View>
                     ) : (
                         <View style={Styles.mainContent}>
                             <Text style={Styles.txtHeader2}>CÓDIGO DO GIFT CARD:</Text>
                             <View style={Styles.codigoContent}>
-                                <Text style={[Styles.txtContentCodigo, { fontSize: 18, letterSpacing: -1, textAlign: 'center' }]}>{gift?.codigo}</Text>
+                                <Text style={[Styles.txtContentCodigo, { fontSize: 18, letterSpacing: -1, textAlign: 'center' }]}>{gift?.codigo} | ( ID: {gift?.id})</Text>
                             </View>
                             <TouchableOpacity
                                 style={Styles.btn}

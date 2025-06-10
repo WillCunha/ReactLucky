@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { Link, Redirect } from "expo-router";
+import { Link } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
@@ -54,8 +54,9 @@ export default function Signup() {
     const [password, setpass] = useState('');
     const [repeatPass, setRepeatPass] = useState('');
     const [cpf, setCpf] = useState('');
+    const [erro, setErro] = useState('');
 
-    async function handleValidation(){
+    async function handleValidation() {
         const isPhoneValid = validatePhone(phone);
         const isEmailValid = validateEmail(email);
         const isCpfValid = validateCPF(cpf);
@@ -80,10 +81,17 @@ export default function Signup() {
                     sobrenome: dadosSobrenome,
                     cep: dadosCep,
                     pass: dadosPass,
-                    register_type: dadosPlataforma
+                    register_type: dadosPlataforma,
+                    photo: '-'
                 })
                     .then(response => {
-                        return <Redirect href='/login'/>
+                        console.log(response.data)
+                        if (response.data.resp.status == 'erro') {
+                            console.log(response.data.resp);
+                            setErro(response.data.resp.mensagem)
+                        } else if (response.data.resp.status == 'ok') {
+                            signIn(dadosTelefone, dadosPass)
+                        }
                     })
             } catch (error) {
                 console.log(error)
@@ -109,7 +117,7 @@ export default function Signup() {
 
     return (
         <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: '#3CAE54' }} >
-            <View style={{ width: '100%', maxHeight: 150, minHeight: 150, overflow: 'hidden',  justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ width: '100%', maxHeight: 150, minHeight: 150, overflow: 'hidden', justifyContent: 'center', alignItems: 'center' }}>
                 <Image
                     source={require('../../../assets/images/logoLucky.png')}
                     style={{ maxHeight: 150, maxWidth: 100 }}
@@ -196,7 +204,8 @@ export default function Signup() {
                             style={styles.button}>
                             <Text style={styles.buttonTxt}> Criar Conta </Text>
                         </TouchableOpacity>
-
+                        <Text style={{ color: '#cc0000', fontWeight: '800' }}>{erro}</Text>
+                        <Text></Text>
                         <Text style={{ color: '#D4D3D8', fontWeight: 700, fontSize: 12, textAlign: 'left', marginTop: '5%' }}>Ao criar sua conta, você concorda com os termos de políticas do Lucky. </Text>
                         {carregando ? (
                             <ActivityIndicator size={'small'} style={{ margin: 20 }} />

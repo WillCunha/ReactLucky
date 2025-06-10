@@ -1,4 +1,5 @@
 import Gratidao from '@/src/components/gratidao';
+import Ops from '@/src/components/ops';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Text, View } from 'react-native';
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   ListaPlataformas: undefined;
   Congrats: undefined;
   Gratidao: undefined
+  Ops: undefined
   PushNotification: undefined
 };
 
@@ -45,6 +47,7 @@ export function Router() {
           <Stack.Screen name="Congrats" component={CongratsScreen} />
           <Stack.Screen name="Gratidao" component={Gratidao} />
           <Stack.Screen name="PushNotification" component={PushNotification} />
+          <Stack.Screen name="Ops" component={Ops} />
         </>
       ) : (
         <>

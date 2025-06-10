@@ -1,3 +1,4 @@
+import { RootStackParamList } from "@/app/routes/Routes";
 import { AntDesign } from "@expo/vector-icons";
 import {
     GoogleSignin,
@@ -5,7 +6,6 @@ import {
     statusCodes
 } from '@react-native-google-signin/google-signin';
 import { useNavigation } from "@react-navigation/native";
-import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -19,12 +19,13 @@ import {
     View
 } from "react-native";
 import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk-next';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import { useAuth } from "../../../app/context/Auth";
 
 
 export default function LoginScreen() {
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const [email, setEmail] = useState("");
     const [password, setPass] = useState("");
@@ -52,7 +53,7 @@ export default function LoginScreen() {
                 const { name, email, photo } = user;
 
                 navigation.navigate('Continuar', { name, email, photo, register_type: 'google' });
-                
+
             } else {
                 Alert.alert("Login cancelado.");
             }
@@ -241,7 +242,7 @@ export default function LoginScreen() {
                     {carregando ? (
                         <ActivityIndicator size={"small"} style={{ margin: 20 }} />
                     ) : (
-                        <Link style={{ marginTop: "10%" }} href="/register">
+                        <TouchableOpacity style={{ marginTop: "10%" }} onPress={() => navigation.navigate('Register')}>
                             <Text
                                 style={{
                                     color: "#D4D3D8",
@@ -253,7 +254,7 @@ export default function LoginScreen() {
                             >
                                 Não tem uma conta no Lucky ainda? Registrar-se agora!
                             </Text>
-                        </Link>
+                        </TouchableOpacity>
                     )}
                 </KeyboardAvoidingView>
             </View>

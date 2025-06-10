@@ -139,7 +139,7 @@ export default function LoginScreen() {
     };
 
 
-    const { socialSignIn } = useAuth();
+    const { socialSignIn, signIn } = useAuth();
 
     function handleLogin() {
         signIn(email, password);

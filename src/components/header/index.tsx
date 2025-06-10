@@ -5,18 +5,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import messaging from '@react-native-firebase/messaging';
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Image, PermissionsAndroid, Platform, StyleSheet, Text, View } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 export default function Header() {
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const [authData, setAuthData] = useState<AuthData>();
-  const [userData, setUserData] = useState<{ nome: string; plataformas: string, plataforma: string, acesso: string, register_type: string, photo: string } | null>(null);
-  const [greeting, setGreeting] = useState<string>(getGreeting());
-  const [isVisible, setIsVisible] = useState(true);
+
 
   const { signOut } = useAuth();
 
@@ -32,11 +30,19 @@ export default function Header() {
     }
   };
 
+  const [authData, setAuthData] = useState<AuthData>();
+  const [userData, setUserData] = useState<{ id: string, nome: string; plataformas: string, plataforma: string, acesso: string, register_type: string, photo: string } | null>(null);
+  const [greeting, setGreeting] = useState<string>(getGreeting());
+  const [token, setToken] = React.useState<string | null>(null);
+
+
+  // 1° Define o "Bom dia", "Boa tarde", "Boa noite" e busca os dados de user.
   useEffect(() => {
-    requestUserPermission();
+    checkPermission();
     const intervalId = setInterval(() => {
       setGreeting(getGreeting());
     }, 60000);
+
 
     const fetchData = async () => {
       try {
@@ -51,6 +57,7 @@ export default function Header() {
 
         if (Array.isArray(jsonData) && jsonData.length > 0) {
           setUserData({
+            id: jsonData[0].id,
             nome: jsonData[0].nome,
             plataformas: jsonData[0].plataformas,
             plataforma: jsonData[0].plataforma,
@@ -72,6 +79,8 @@ export default function Header() {
     return () => clearInterval(intervalId);
   }, []);
 
+
+  // 2° Verifica se o usuario está acessando pela primeira vez e se ele ja tem plataformas selecionadas.
   useEffect(() => {
     if (userData?.acesso == "0") {
       const timeout = setTimeout(() => {
@@ -84,13 +93,14 @@ export default function Header() {
 
       const timeout = setTimeout(() => {
         navigation.navigate('ListaPlataformas');
-      }, 2000); // 2000 milissegundos = 2 segundos
+      }, 1000); // 2000 milissegundos = 2 segundos
 
       // cleanup pro caso do componente desmontar antes dos 2 segundos
       return () => clearTimeout(timeout);
     }
   }, [userData]);
 
+  // 3° Google SignIn
   useEffect(() => {
     GoogleSignin.configure({
       webClientId: '515317620527-g6eikuir369gdcvmc868ljng30j9qsvn.apps.googleusercontent.com', // obtido no console do Google
@@ -98,7 +108,105 @@ export default function Header() {
     });
   }, []);
 
+  // 4° Controla as notificações ( Se não tiver o token, chama a função para gerar um )
+  useEffect(() => {
+    if (!userData) return; // Garante que o userData esteja preenchido
 
+    // As permissões são solicitadas e o token FCM só é buscado se userData estiver válido
+    const getTokenAndSubscribe = async () => {
+      try {
+        await getFcmToken(); // Obtém o token FCM
+
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+          console.log('Nova notificação!', JSON.stringify(remoteMessage.notification));
+        });
+
+        return unsubscribe; // Retorna o unsubscribe para ser limpo quando necessário
+      } catch (error) {
+        console.error('Erro ao solicitar permissão ou obter FCM token:', error);
+      }
+    };
+
+    getTokenAndSubscribe();
+
+  }, [userData]);
+
+
+  //Gera o token.
+  const getFcmToken = async () => {
+    try {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+        console.log('FCM Token:', fcmToken);
+        setToken(fcmToken);
+        sendTokenToServer(fcmToken);
+      } else {
+        console.warn('Não foi possível obter o token FCM');
+      }
+    } catch (error) {
+      console.log('Erro ao obter o token FCM:', JSON.stringify(error));
+    }
+  };
+
+
+  //Envia o Token pra API
+  const sendTokenToServer = async (fcmToken: string) => {
+    if (!userData?.id) {
+      console.warn('ID do usuário não disponível');
+      return;
+    }
+
+    try {
+      const response = await axios.post('https://api.wfsoft.com.br/wf-lucky/api/lucky/tokenFCM/update', {
+        id_user: userData.id,  // ID do usuário autenticado
+        token: fcmToken,
+      });
+
+      console.log('Token enviado com sucesso:', response.data);
+    } catch (error) {
+      console.log('Erro ao enviar token para o servidor:', JSON.stringify(error));
+    }
+  };
+
+  //Checa se o usuario tem as permissões habilitadas, se não, solicita.
+  const checkPermission = async () => {
+    if (Platform.OS === 'android') {
+      if (Platform.Version >= 33) {
+        // Android 13+
+        const result = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+
+        if (result === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('✅ Permissão de notificação concedida');
+
+        } else {
+          console.warn('❌ Permissão de notificação negada!');
+
+        }
+      } else {
+        // Android < 13 não exige permissão runtime
+        console.log('✅ Android < 13: notificações permitidas por padrão');
+
+      }
+    } else if (Platform.OS === 'ios') {
+      // iOS
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        console.log('✅ Permissão para notificações no iOS:', authStatus);
+
+      } else {
+        console.warn('❌ Permissão de notificação no iOS não concedida');
+
+      }
+    }
+  };
+
+  //Logout com o Google.
   const signOutWithGoogle = async () => {
     try {
       await GoogleSignin.signOut();
@@ -108,20 +216,6 @@ export default function Header() {
     }
   };
 
-  const requestUserPermission = async () => {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      console.log('Permissão para notificações:', authStatus);
-      setIsVisible(false);
-    } else {
-      console.warn('Permissão para notificações não concedida');
-      setIsVisible(true);
-    }
-  };
 
   return (
     <View style={styles.headerContainer}>
@@ -154,6 +248,7 @@ export default function Header() {
           }
         </View>
       </View>
+
     </View>
 
   );
@@ -238,5 +333,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
 })

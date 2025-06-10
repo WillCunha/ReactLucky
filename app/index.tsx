@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
-import { captureRef } from 'react-native-view-shot';
+import { captureScreen } from 'react-native-view-shot';
 import { AuthProvider } from "./context/Auth";
 import OnboardingScreen from './onboarding';
 import { Router } from "./routes/Routes";
@@ -38,7 +38,7 @@ function App() {
     const takeScreenshotAndSend = async () => {
     try {
       // 1. Captura a tela
-      const uri = await captureRef(viewRef, {
+      const uri = await captureScreen({
         format: 'png',
         quality: 0.8,
       });
@@ -60,6 +60,8 @@ function App() {
         },
       });
 
+      console.log(response)
+
       if (response.status === 200) {
         Alert.alert('Sucesso', 'Print enviado com sucesso!');
       } else {
@@ -79,7 +81,7 @@ function App() {
             <StatusBar backgroundColor="#3CAF54" translucent={false} barStyle="light-content" />
 
             {isAppFirstLaunched ? <OnboardingScreen /> : <Router />}
-            <View style={styles.container} ref={viewRef}>
+            <View style={styles.container}>
                 <TouchableOpacity style={styles.floatingButton} onPress={takeScreenshotAndSend}>
                     <AntDesign name={'camera'} size={24}
                         color="#fff" />

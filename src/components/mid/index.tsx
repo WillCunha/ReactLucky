@@ -20,9 +20,9 @@ const Mid: React.FC = () => {
   // Função para lidar com o clique nos botões
   const handleButtonPress = (buttonNumber: number) => {
     if (buttonNumber === randomNumber) {
-      Alert.alert('Parabéns! Você acertou!');
+      navigation.navigate('Congrats')
     } else {
-      Alert.alert(`Você clicou no botão ${buttonNumber}, tente novamente!`);
+      Alert.alert(`Calma... tente de novo!`);
     }
   };
 
@@ -33,11 +33,7 @@ const Mid: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.infoText}>Escolha o botão! </Text>
-
-      <TouchableOpacity onPress={() => navigation.navigate('PushNotification')}>
-          <Text>Clica!</Text>
-         </TouchableOpacity>
+      <Text style={styles.infoText}>Escolha um botão!</Text>
 
       {[1, 2, 3, 4, 5].map((buttonNumber) => (
         <TouchableOpacity
@@ -74,6 +70,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 18,
+    fontWeight: 800,
     marginBottom: 20,
     textAlign: 'center',
   },
