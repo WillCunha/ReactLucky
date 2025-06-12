@@ -2,8 +2,8 @@
   "expo": {
     "name": "Lucky",
     "slug": "AppLuckyExpo",
-    "version": "1.0.1",
-    "runtimeVersion": "1.0.1",
+    "version": "1.0.2",
+    "runtimeVersion": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/logoV2.png",
     "scheme": "lucky",
@@ -18,7 +18,7 @@
       }
     },
     "android": {
-      "versionCode": 1,
+      "versionCode": 17,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logoV2.png",
         "backgroundColor": "#ffffff"
