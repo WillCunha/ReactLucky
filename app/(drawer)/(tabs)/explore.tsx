@@ -109,7 +109,7 @@ const ListaPlataformas = () => {
 
   const renderItem = ({ item }: { item: Item }) => {
     const isSelected = selectedItems.includes(item.id);
-
+    console.log(item);
     return (
 
       <TouchableOpacity

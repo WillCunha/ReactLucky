@@ -23,10 +23,10 @@ function App() {
 
     async function loadScreens(): Promise<void> {
         try {
-            const loadScreens = await AsyncStorage.getItem('ISAPPFIRSTLAUNCH');
+            const loadScreens = await AsyncStorage.getItem('PRIMEIRAVEZ');
             if (loadScreens == null) {
                 setIsAppFirstLaunched(true);
-                AsyncStorage.setItem('ISAPPFIRSTLAUNCH', 'false');
+                AsyncStorage.setItem('PRIMEIRAVEZ', 'false');
             } else {
                 setIsAppFirstLaunched(false);
             }

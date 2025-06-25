@@ -1,12 +1,12 @@
 import { useAuth } from '@/app/context/Auth';
 import Header from '@/src/components/header';
-import Mid from '@/src/components/mid';
+import WalletMid from '@/src/components/mid/wallet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from "expo-constants";
 import { useEffect, useState } from 'react';
 import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 
-export default function HomeScreen() {
+export default function Wallet() {
 
   const [userData, setUserData] = useState<{ nome: string; plataformas: string } | null>(null);
 
@@ -57,7 +57,7 @@ export default function HomeScreen() {
         <StatusBar backgroundColor="#3CAF54" translucent={false} barStyle="light-content" />
         
         <Header />
-        < Mid />
+        < WalletMid />
         </>
 
       </View>

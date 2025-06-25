@@ -31,7 +31,7 @@ export default function Header() {
   };
 
   const [authData, setAuthData] = useState<AuthData>();
-  const [userData, setUserData] = useState<{ id: string, nome: string; plataformas: string, plataforma: string, acesso: string, register_type: string, photo: string } | null>(null);
+  const [userData, setUserData] = useState<{ id: string, nome: string; plataformas: string, pontos: string, plataforma: string, acesso: string, register_type: string, photo: string } | null>(null);
   const [greeting, setGreeting] = useState<string>(getGreeting());
   const [token, setToken] = React.useState<string | null>(null);
 
@@ -61,6 +61,7 @@ export default function Header() {
             nome: jsonData[0].nome,
             plataformas: jsonData[0].plataformas,
             plataforma: jsonData[0].plataforma,
+            pontos: jsonData[0].pontos,
             register_type: jsonData[0].register_type,
             photo: jsonData[0].photo,
             acesso: jsonData[0].acesso
@@ -235,6 +236,11 @@ export default function Header() {
         <Text style={styles.headerTx}> {greeting}, {userData ? userData.nome : "Carregando..."}!</Text>
       </View>
       <View style={styles.headerRight}>
+        <View style={styles.btnCartCircle}>
+
+          <Ionicons name="wallet" size={24} color="#404B51" onPress={() => navigation.navigate('Wallet')} />
+
+        </View>
         <View style={styles.btnCartCircle}>
 
           <Ionicons name="list" size={24} color="#404B51" onPress={() => navigation.navigate('ListaPlataformas')} />

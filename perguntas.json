@@ -1,0 +1,204 @@
+{
+    "resp": [
+        {
+            "id": "150",
+            "pergunta": "Qual é a montanha mais alta da América do Sul?",
+            "alternativa_a": "Monte Puncak Jaya",
+            "alternativa_b": "Aconcágua",
+            "alternativa_c": "Monte Fitz Roy",
+            "resposta_correta": "b",
+            "nivel": "Médio",
+            "pontos":  5
+        },
+        {
+            "id": "198",
+            "pergunta": "Qual é o nome da famosa peça teatral escrita por William Shakespeare, que se passa na Verona medieval?",
+            "alternativa_a": "Hamlet",
+            "alternativa_b": "Macbeth",
+            "alternativa_c": "Romeu e Julieta",
+            "resposta_correta": "c",
+            "nivel": "Dificil",
+            "pontos":  15
+        },
+        {
+            "id": "271",
+            "pergunta": "Quem foi o famoso autor de \"A Metamorfose\"?",
+            "alternativa_a": "Franz Kafka",
+            "alternativa_b": "Albert Camus",
+            "alternativa_c": "Fyodor Dostoiévski",
+            "resposta_correta": "a",
+            "nivel": "Muito Dificil",
+            "pontos":  50
+        },
+        {
+            "id": "266",
+            "pergunta": "Quem foi o autor de \"1984\" e \"A Revolução dos Bichos\"?",
+            "alternativa_a": "Aldous Huxley",
+            "alternativa_b": "George Orwell",
+            "alternativa_c": "Ray Bradbury",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "62",
+            "pergunta": "Quem foi o famoso físico que desenvolveu as leis do eletromagnetismo?",
+            "alternativa_a": "Albert Einstein",
+            "alternativa_b": "Michael Faraday",
+            "alternativa_c": "Nikola Tesla",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "231",
+            "pergunta": "Qual é a principal fonte de energia utilizada pela maioria das usinas hidrelétricas?",
+            "alternativa_a": "Energia solar",
+            "alternativa_b": "Energia eólica",
+            "alternativa_c": "Energia hídrica",
+            "resposta_correta": "c",
+            "nivel": "lorens",
+            "pontos":  30
+        },
+        {
+            "id": "228",
+            "pergunta": "Quem foi o autor da famosa obra \"Dom Quixote de la Mancha\"?",
+            "alternativa_a": "Gabriel García Márquez",
+            "alternativa_b": "Miguel de Cervantes",
+            "alternativa_c": "Juan Rulfo",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "66",
+            "pergunta": "Qual é a maior floresta tropical do mundo?",
+            "alternativa_a": "Floresta do Congo",
+            "alternativa_b": "Floresta Amazônica",
+            "alternativa_c": "Floresta de Borneo",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "96",
+            "pergunta": "Em que ano o homem realizou o primeiro voo espacial tripulado?",
+            "alternativa_a": "1959",
+            "alternativa_b": "1961",
+            "alternativa_c": "1969",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "207",
+            "pergunta": "Qual é o nome da maior floresta do mundo?",
+            "alternativa_a": "Floresta Amazônica",
+            "alternativa_b": "Floresta do Congo",
+            "alternativa_c": "Floresta de Taiga",
+            "resposta_correta": "a",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "169",
+            "pergunta": "Em que ano o Titanic afundou?",
+            "alternativa_a": "1910",
+            "alternativa_b": "1912",
+            "alternativa_c": "1915",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "56",
+            "pergunta": "Qual foi a primeira nação a conquistar a independência na América Latina?",
+            "alternativa_a": "Brasil",
+            "alternativa_b": "Argentina",
+            "alternativa_c": "Haiti",
+            "resposta_correta": "c",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "132",
+            "pergunta": "Quem é o autor da famosa obra \"Dom Quixote\"?",
+            "alternativa_a": "Miguel de Cervantes",
+            "alternativa_b": "William Shakespeare",
+            "alternativa_c": "François Rabelais",
+            "resposta_correta": "a",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "261",
+            "pergunta": "Qual é o nome do famoso físico que formulou a teoria da relatividade?",
+            "alternativa_a": "Albert Einstein",
+            "alternativa_b": "Niels Bohr",
+            "alternativa_c": "Isaac Newton",
+            "resposta_correta": "a",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "35",
+            "pergunta": "Qual o nome da famosa Torre localizada em Paris, França?",
+            "alternativa_a": "Torre de Pisa",
+            "alternativa_b": "Torre Eiffel",
+            "alternativa_c": "Torre de Londres",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "183",
+            "pergunta": "Qual é o nome do famoso arquipélago que pertence ao Brasil, conhecido pelas suas praias paradisíacas?",
+            "alternativa_a": "Fernando de Noronha",
+            "alternativa_b": "Galápagos",
+            "alternativa_c": "Maldivas",
+            "resposta_correta": "a",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "173",
+            "pergunta": "Qual é a maior cidade do Brasil em termos de população?",
+            "alternativa_a": "Rio de Janeiro",
+            "alternativa_b": "São Paulo",
+            "alternativa_c": "Salvador",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "201",
+            "pergunta": "Quem é o autor da obra \"O Retrato de Dorian Gray\"?",
+            "alternativa_a": "Oscar Wilde",
+            "alternativa_b": "Mark Twain",
+            "alternativa_c": "Charles Dickens",
+            "resposta_correta": "a",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "241",
+            "pergunta": "Qual é o nome do famoso cientista que formulou as leis da gravitação universal?",
+            "alternativa_a": "Isaac Newton",
+            "alternativa_b": "Albert Einstein",
+            "alternativa_c": "Galileo Galilei",
+            "resposta_correta": "a",
+            "nivel": "lorens",
+            "pontos":  5
+        },
+        {
+            "id": "155",
+            "pergunta": "Quem foi o responsável pela pintura do teto da Capela Sistina?",
+            "alternativa_a": "Raphael",
+            "alternativa_b": "Michelangelo",
+            "alternativa_c": "Leonardo da Vinci",
+            "resposta_correta": "b",
+            "nivel": "lorens",
+            "pontos":  5
+        }
+    ]
+}

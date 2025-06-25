@@ -2,13 +2,13 @@
   "expo": {
     "name": "Lucky",
     "slug": "AppLuckyExpo",
-    "version": "1.0.2",
-    "runtimeVersion": "1.0.2",
+    "version": "1.0.3",
+    "runtimeVersion": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/logoV2.png",
     "scheme": "lucky",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "googleServicesFile": "./GoogleService-Info.plist",
@@ -71,7 +71,10 @@
       }
     },
     "updates": {
-      "url": "https://u.expo.dev/d243cb14-2ca1-45ae-8578-06d33709b027"
+      "url": "https://u.expo.dev/d243cb14-2ca1-45ae-8578-06d33709b027",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     }
   }
 }
