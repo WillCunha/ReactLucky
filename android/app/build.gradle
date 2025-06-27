@@ -104,10 +104,7 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-
-         kotlinOptions {
-    jvmTarget = "1.8"
-  }
+        
     }
     buildTypes {
         debug {
@@ -131,6 +128,10 @@ android {
     androidResources {
         ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
     }
+}
+
+kotlin {
+    jvmToolchain(8)
 }
 
 // Apply static values from `gradle.properties` to the `android.packagingOptions`
