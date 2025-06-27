@@ -104,6 +104,10 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+
+         kotlinOptions {
+    jvmTarget = "1.8"
+  }
     }
     buildTypes {
         debug {
