@@ -4,38 +4,42 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
+import TrackPlayer from 'react-native-track-player';
 import { captureScreen } from 'react-native-view-shot';
+import trackPlayerService from '../assets/services/services';
 import { AuthProvider } from "./context/Auth";
 import OnboardingScreen from './onboarding';
 import { Router } from "./routes/Routes";
 
 function App() {
 
-    const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(true);
-    const viewRef = useRef();
+  TrackPlayer.registerPlaybackService(() => trackPlayerService);
 
-    useEffect(() => {
-        loadScreens();
-    }, [])
+  const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(true);
+  const viewRef = useRef();
+
+  useEffect(() => {
+    loadScreens();
+  }, [])
 
 
-    
 
-    async function loadScreens(): Promise<void> {
-        try {
-            const loadScreens = await AsyncStorage.getItem('PRIMEIRAVEZ');
-            if (loadScreens == null) {
-                setIsAppFirstLaunched(true);
-                AsyncStorage.setItem('PRIMEIRAVEZ', 'false');
-            } else {
-                setIsAppFirstLaunched(false);
-            }
-        } catch (error) {
-            console.warn('ERROR ONBOARDING: ' + error);
-        }
+
+  async function loadScreens(): Promise<void> {
+    try {
+      const loadScreens = await AsyncStorage.getItem('PRIMEIRAVEZ');
+      if (loadScreens == null) {
+        setIsAppFirstLaunched(true);
+        AsyncStorage.setItem('PRIMEIRAVEZ', 'false');
+      } else {
+        setIsAppFirstLaunched(false);
+      }
+    } catch (error) {
+      console.warn('ERROR ONBOARDING: ' + error);
     }
+  }
 
-    const takeScreenshotAndSend = async () => {
+  const takeScreenshotAndSend = async () => {
     try {
       // 1. Captura a tela
       const uri = await captureScreen({
@@ -74,49 +78,49 @@ function App() {
     }
   };
 
-    return (
+  return (
 
-        <AuthProvider>
+    <AuthProvider>
 
-            <StatusBar backgroundColor="#3CAF54" translucent={false} barStyle="light-content" />
+      <StatusBar backgroundColor="#3CAF54" translucent={false} barStyle="light-content" />
 
-            {isAppFirstLaunched ? <OnboardingScreen /> : <Router />}
-            <View style={styles.container}>
-                <TouchableOpacity style={styles.floatingButton} onPress={takeScreenshotAndSend}>
-                    <AntDesign name={'camera'} size={24}
-                        color="#fff" />
-                </TouchableOpacity>
-            </View>
-        </AuthProvider>
-    );
+      {isAppFirstLaunched ? <OnboardingScreen /> : <Router />}
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.floatingButton} onPress={takeScreenshotAndSend}>
+          <AntDesign name={'camera'} size={24}
+            color="#fff" />
+        </TouchableOpacity>
+      </View>
+    </AuthProvider>
+  );
 }
 
 export default App;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        maxHeight: 10
-    },
-    floatingButton: {
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        width: 60,
-        height: 60,
-        backgroundColor: '#3CAF54',
-        borderRadius: 10, // Quadrado com bordas levemente arredondadas
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 5, // sombra no Android
-        shadowColor: '#000', // sombra no iOS
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
+  container: {
+    flex: 1,
+    maxHeight: 10
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    width: 60,
+    height: 60,
+    backgroundColor: '#3CAF54',
+    borderRadius: 10, // Quadrado com bordas levemente arredondadas
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5, // sombra no Android
+    shadowColor: '#000', // sombra no iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
 })
