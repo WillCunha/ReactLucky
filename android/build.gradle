@@ -16,8 +16,6 @@ buildscript {
   }
 }
 
-def reactNativeAndroidDir = new File(rootDir, "node_modules/react-native/android")
-
 
 allprojects {
   repositories {
