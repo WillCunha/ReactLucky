@@ -1,7 +1,9 @@
+
 import { RootStackParamList } from '@/app/routes/Routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Player } from '@react-native-community/audio-toolkit';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Modal,
   ScrollView,
@@ -11,13 +13,12 @@ import {
   View,
 } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
-import TrackPlayer, { Capability } from 'react-native-track-player';
 
 type Musica = {
   id: string;
   nome: string;
-  artista: string,
-  letra: string
+  artista: string;
+  letra: string;
   nivel: string;
   pontos: number;
   tempo_inicio: number;
@@ -26,8 +27,8 @@ type Musica = {
   resposta_b: string;
   resposta_c: string;
   resposta_correta: 'a' | 'b' | 'c';
-  grupo: string,
-  slug: string
+  grupo: string;
+  slug: string;
 };
 
 export default function MusicasScreen() {
@@ -42,32 +43,9 @@ export default function MusicasScreen() {
   const [tempoRestante, setTempoRestante] = useState(10);
   const [intervalo, setIntervalo] = useState<NodeJS.Timeout | null>(null);
 
+  const playerRef = useRef<Player | null>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const musicaAtual = musicas[index];
-
-  const setupTrackPlayer = async () => {
-    await TrackPlayer.setupPlayer({
-      waitForBuffer: true,
-    });
-
-    await TrackPlayer.updateOptions({
-      stopWithApp: true,
-      capabilities: [
-        Capability.Play,
-        Capability.Pause,
-        Capability.Stop,
-      ],
-      compactCapabilities: [
-        Capability.Play,
-        Capability.Pause,
-      ],
-      notificationCapabilities: [
-        Capability.Play,
-        Capability.Pause,
-        Capability.Stop,
-      ],
-    });
-  };
 
   const loadScore = async () => {
     const jsonString = await AsyncStorage.getItem("WF_LUCKY");
@@ -95,17 +73,19 @@ export default function MusicasScreen() {
     }
   };
 
-  const tocarTrecho = async () => {
-    await TrackPlayer.reset();
-    console.log("Link musica: " + "https://api.wfsoft.com.br/wf-lucky/files/songs/"+musicaAtual.grupo+"/"+musicaAtual.slug)
-    await TrackPlayer.add({
-      id: 'track',
-      url: 'https://api.wfsoft.com.br/wf-lucky/files/songs/'+musicaAtual.grupo+'/'+musicaAtual.slug,
-      title: musicaAtual.nome,
+  const tocarTrecho = () => {
+    if (playerRef.current) {
+      playerRef.current.destroy();
+    }
+    const url = `https://api.wfsoft.com.br/wf-lucky/files/songs/${musicaAtual.grupo}/${musicaAtual.slug}`;
+    const player = new Player(url, { autoDestroy: false }).prepare(() => {
+      player.seek(musicaAtual.tempo_inicio * 1000);
+      player.play();
+      setTimeout(() => {
+        player.pause();
+      }, (musicaAtual.tempo_fim - musicaAtual.tempo_inicio) * 1000);
     });
-    await TrackPlayer.seekTo(musicaAtual.tempo_inicio);
-    await TrackPlayer.play();
-    setTimeout(() => TrackPlayer.pause(), (musicaAtual.tempo_fim - musicaAtual.tempo_inicio) * 1000);
+    playerRef.current = player;
   };
 
   const iniciarTimer = () => {
@@ -177,7 +157,6 @@ export default function MusicasScreen() {
   useEffect(() => {
     loadScore();
     loadMusicas();
-    setupTrackPlayer();
   }, []);
 
   useEffect(() => {
@@ -206,7 +185,7 @@ export default function MusicasScreen() {
               ? letra === respostaCorreta ? styles.correta : styles.errada
               : styles.alternativa}
           >
-            <Text>{`${letra.toUpperCase()}) ${musicaAtual[`alternativa_${letra}`]}`}</Text>
+            <Text>{`${letra.toUpperCase()}) ${musicaAtual[`resposta_${letra}`]}`}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>

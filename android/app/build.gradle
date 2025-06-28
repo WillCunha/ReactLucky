@@ -104,7 +104,6 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        
     }
     buildTypes {
         debug {
@@ -128,10 +127,6 @@ android {
     androidResources {
         ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
     }
-}
-
-kotlin {
-    jvmToolchain(8)
 }
 
 // Apply static values from `gradle.properties` to the `android.packagingOptions`
@@ -182,12 +177,5 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
-    }
-}
-
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }
