@@ -9,6 +9,9 @@
     "scheme": "lucky",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
+    "permissions": [
+      "INTERNET"
+    ],
     "ios": {
       "supportsTablet": true,
       "googleServicesFile": "./GoogleService-Info.plist",
@@ -19,6 +22,9 @@
     },
     "android": {
       "versionCode": 17,
+      "permissions": [
+        "INTERNET"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logoV2.png",
         "backgroundColor": "#ffffff"

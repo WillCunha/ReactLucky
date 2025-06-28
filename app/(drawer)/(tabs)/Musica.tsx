@@ -1,6 +1,7 @@
 import { RootStackParamList } from '@/app/routes/Routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { Audio } from 'expo-av';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Modal,
@@ -11,9 +12,7 @@ import {
   View,
 } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
-import Sound from 'react-native-sound';
 
-// Tipo para cada música
 type Musica = {
   id: string;
   nome: string;
@@ -31,15 +30,6 @@ type Musica = {
   slug: string;
 };
 
-// Tipo manual para o player
-type AudioPlayer = {
-  destroy: () => void;
-  prepare: (callback: () => void) => void;
-  seek: (ms: number) => void;
-  play: () => void;
-  pause: () => void;
-};
-
 export default function MusicasScreen() {
   const [musicas, setMusicas] = useState<Musica[]>([]);
   const [index, setIndex] = useState(0);
@@ -52,7 +42,7 @@ export default function MusicasScreen() {
   const [tempoRestante, setTempoRestante] = useState(10);
   const [intervalo, setIntervalo] = useState<NodeJS.Timeout | null>(null);
 
-  const playerRef = useRef<AudioPlayer | null>(null);
+  const soundRef = useRef<Audio.Sound | null>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const musicaAtual = musicas[index];
 
@@ -83,23 +73,27 @@ export default function MusicasScreen() {
     }
   };
 
-  const tocarTrecho = () => {
-    const url = `https://api.wfsoft.com.br/wf-lucky/files/songs/${musicaAtual.grupo}/${musicaAtual.slug}`;
-    const sound = new Sound(url, undefined, (error) => {
-      if (error) {
-        console.log('Erro ao carregar áudio:', error);
-        return;
+  const tocarTrecho = async () => {
+    try {
+      if (soundRef.current) {
+        await soundRef.current.unloadAsync();
       }
 
-      sound.setCurrentTime(musicaAtual.tempo_inicio);
-      sound.play(() => {
-        sound.release();
-      });
+      const url = `https://api.wfsoft.com.br/wf-lucky/files/songs/${musicaAtual.grupo}/${musicaAtual.slug}`;
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: url },
+        { shouldPlay: true, positionMillis: musicaAtual.tempo_inicio * 1000 }
+      );
 
-      setTimeout(() => {
-        sound.pause();
+      soundRef.current = sound;
+
+      setTimeout(async () => {
+        await sound.pauseAsync();
       }, (musicaAtual.tempo_fim - musicaAtual.tempo_inicio) * 1000);
-    });
+
+    } catch (error) {
+      console.log("Erro ao tocar trecho:", error);
+    }
   };
 
   const iniciarTimer = () => {
