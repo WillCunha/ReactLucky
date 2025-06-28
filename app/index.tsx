@@ -4,16 +4,13 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
-import TrackPlayer from 'react-native-track-player';
 import { captureScreen } from 'react-native-view-shot';
-import trackPlayerService from '../assets/services/services';
 import { AuthProvider } from "./context/Auth";
 import OnboardingScreen from './onboarding';
 import { Router } from "./routes/Routes";
 
 function App() {
 
-  TrackPlayer.registerPlaybackService(() => trackPlayerService);
 
   const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(true);
   const viewRef = useRef();

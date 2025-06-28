@@ -79,7 +79,7 @@ const Mid: React.FC = () => {
         <View style={styles.midButtons}>
           <TouchableOpacity
             style={[styles.button25, { backgroundColor: '#28a745', flexDirection: 'column', minHeight: 100, maxWidth: '33%' }]}
-            onPress={() => navigation.navigate('Deck')}
+            onPress={() => navigation.navigate('Musicas')}
           >
             <MaterialCommunityIcons name="cards-playing-spade-outline" size={32} color="white" />
             <Text style={styles.buttonText}>CARTAS</Text>

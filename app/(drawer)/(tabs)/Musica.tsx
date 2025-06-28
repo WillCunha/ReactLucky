@@ -1,7 +1,5 @@
-
 import { RootStackParamList } from '@/app/routes/Routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Player } from '@react-native-community/audio-toolkit';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -13,7 +11,9 @@ import {
   View,
 } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import Sound from 'react-native-sound';
 
+// Tipo para cada música
 type Musica = {
   id: string;
   nome: string;
@@ -31,6 +31,15 @@ type Musica = {
   slug: string;
 };
 
+// Tipo manual para o player
+type AudioPlayer = {
+  destroy: () => void;
+  prepare: (callback: () => void) => void;
+  seek: (ms: number) => void;
+  play: () => void;
+  pause: () => void;
+};
+
 export default function MusicasScreen() {
   const [musicas, setMusicas] = useState<Musica[]>([]);
   const [index, setIndex] = useState(0);
@@ -43,7 +52,7 @@ export default function MusicasScreen() {
   const [tempoRestante, setTempoRestante] = useState(10);
   const [intervalo, setIntervalo] = useState<NodeJS.Timeout | null>(null);
 
-  const playerRef = useRef<Player | null>(null);
+  const playerRef = useRef<AudioPlayer | null>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const musicaAtual = musicas[index];
 
@@ -63,8 +72,9 @@ export default function MusicasScreen() {
       setErroCarregamento(false);
       const response = await fetch("https://api.wfsoft.com.br/wf-lucky/api/lucky/musicas/select");
       const data = await response.json();
-      if (data?.data) {
-        setMusicas(data.data);
+      console.log(data);
+      if (Array.isArray(data?.resp)) {
+        setMusicas(data.resp);
       } else {
         setErroCarregamento(true);
       }
@@ -74,18 +84,22 @@ export default function MusicasScreen() {
   };
 
   const tocarTrecho = () => {
-    if (playerRef.current) {
-      playerRef.current.destroy();
-    }
     const url = `https://api.wfsoft.com.br/wf-lucky/files/songs/${musicaAtual.grupo}/${musicaAtual.slug}`;
-    const player = new Player(url, { autoDestroy: false }).prepare(() => {
-      player.seek(musicaAtual.tempo_inicio * 1000);
-      player.play();
+    const sound = new Sound(url, undefined, (error) => {
+      if (error) {
+        console.log('Erro ao carregar áudio:', error);
+        return;
+      }
+
+      sound.setCurrentTime(musicaAtual.tempo_inicio);
+      sound.play(() => {
+        sound.release();
+      });
+
       setTimeout(() => {
-        player.pause();
+        sound.pause();
       }, (musicaAtual.tempo_fim - musicaAtual.tempo_inicio) * 1000);
     });
-    playerRef.current = player;
   };
 
   const iniciarTimer = () => {

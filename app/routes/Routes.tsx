@@ -9,6 +9,7 @@ import CongratsScreen from '../(drawer)/(tabs)/congrats';
 import Deck from '../(drawer)/(tabs)/deck';
 import ListaPlataformas from '../(drawer)/(tabs)/explore';
 import Loja from '../(drawer)/(tabs)/Loja';
+import MusicasScreen from '../(drawer)/(tabs)/Musica';
 import PerguntasScreen from '../(drawer)/(tabs)/perguntas';
 import Tabs from '../(drawer)/(tabs)/Tabs';
 import Wallet from '../(drawer)/(tabs)/Wallet';
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   Wallet: undefined
   Ads: undefined
   Config: undefined
+  Musicas: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -66,6 +68,7 @@ export function Router() {
           <Stack.Screen name="Wallet" component={Wallet} />
           <Stack.Screen name="Ads" component={AdsScreen} />
           <Stack.Screen name="Config" component={ConfigScreen} />
+          <Stack.Screen name="Musicas" component={MusicasScreen} />
         </>
       ) : (
         <>
