@@ -22,8 +22,7 @@ jobs:
       - name: 📦 Instala EAS CLI
         run: npm install -g eas-cli
 
-      - name: 🔐 Autenticação EAS
-        run: eas login --token ${{ secrets.EAS_TOKEN }}
-
       - name: 🛠️ Build Android (developmentClient)
         run: eas build --platform android --profile development --non-interactive --no-wait
+        env:
+          EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
