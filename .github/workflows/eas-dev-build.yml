@@ -1,0 +1,29 @@
+name: EAS Development Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-development:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v3
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🧩 Instala dependências
+        run: npm install
+
+      - name: 📦 Instala EAS CLI
+        run: npm install -g eas-cli
+
+      - name: 🔐 Autenticação EAS
+        run: eas login --token ${{ secrets.EAS_TOKEN }}
+
+      - name: 🛠️ Build Android (developmentClient)
+        run: eas build --platform android --profile development --non-interactive --no-wait
